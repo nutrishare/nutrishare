@@ -1,15 +1,37 @@
 {
   "name": "nutrishare",
-  "version": "1.0.50",
+  "version": "0.0.",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "bun run --watch src/index.ts"
   },
   "dependencies": {
-    "elysia": "latest"
+    "@elysiajs/eden": "^0.6.5",
+    "@elysiajs/jwt": "^0.6.4",
+    "@elysiajs/swagger": "^0.6.2",
+    "@prisma/client": "^5.2.0",
+    "elysia": "latest",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "vite-plugin-ssr": "^0.4.140"
   },
   "devDependencies": {
-    "bun-types": "latest"
+    "@biomejs/biome": "^1.1.2",
+    "@tsconfig/bun": "^1.0.0",
+    "@tsconfig/strictest": "^2.0.2",
+    "@tsconfig/vite-react": "^2.0.0",
+    "@types/react": "^18.2.21",
+    "@types/react-dom": "^18.2.7",
+    "@vitejs/plugin-react": "^4.0.4",
+    "bun-types": "latest",
+    "prettier": "^3.0.3",
+    "prisma": "^5.2.0",
+    "typescript": "^5.2.2",
+    "vite": "^4.4.9"
   },
-  "module": "src/index.js"
+  "module": "src/index.js",
+  "type": "module",
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
 }
