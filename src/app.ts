@@ -1,10 +1,9 @@
 import Elysia from "elysia";
 import swagger from "./plugins/swagger.plugin";
 import auth from "./auth/auth.router";
-import jsxPlugin from "./plugins/jsx.plugin";
+// import jsxPlugin from "./plugins/jsx.plugin";
 import jwt from "./plugins/jwt.plugin";
-import authMiddleware from "./auth/auth.middleware";
-import { createServer as createViteServer } from "vite";
+// import { createServer as createViteServer } from "vite";
 
 // const vite = await createViteServer({
 //   server: { middlewareMode: true },
@@ -12,9 +11,9 @@ import { createServer as createViteServer } from "vite";
 // });
 
 const app = new Elysia()
-  .use(jsxPlugin)
+  // .use(jsxPlugin)
   .use(swagger)
-  .group("/api", (app) => app.use(jwt).use(auth).use(authMiddleware))
-  .get("/", () => "Hello, world!");
+  .use(jwt)
+  .group("/api", (app) => app.use(auth));
 
 export default app;
