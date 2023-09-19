@@ -1,23 +1,24 @@
-import { Elysia, t } from "elysia";
+import { Elysia } from "elysia";
 import AuthService from "./auth.service";
 import jwt from "../plugins/jwt.plugin";
 import authMiddleware from "./auth.middleware";
+import { userModel } from "../user/user.model";
+import { authModel } from "./auth.model";
 
-const auth = new Elysia({ prefix: "/auth" })
+export default new Elysia({ prefix: "/auth" })
   .use(jwt)
   .decorate("getAuthService", () => new AuthService())
+  .use(authModel)
+  .use(userModel)
   .post(
     "/register",
     async ({ body, getAuthService }) => {
       const authService = getAuthService();
-      return authService.register(body);
+      return await authService.register(body);
     },
     {
-      body: t.Object({
-        username: t.String(),
-        email: t.String(),
-        password: t.String(),
-      }),
+      body: "auth.register",
+      response: "user.user",
     },
   )
   .post(
@@ -29,13 +30,11 @@ const auth = new Elysia({ prefix: "/auth" })
       return { accessToken };
     },
     {
-      body: t.Object({
-        login: t.String(),
-        password: t.String(),
-      }),
+      body: "auth.login",
+      response: "auth.token",
     },
   )
   .use(authMiddleware)
-  .get("/me", async () => "a");
-
-export default auth;
+  .get("/me", ({ user }) => user, {
+    response: "user.user",
+  });
