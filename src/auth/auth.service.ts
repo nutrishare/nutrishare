@@ -47,14 +47,8 @@ export default class AuthService {
     return user;
   }
 
-  // me() {
-  //   return "Me";
-  // }
-
   private async usernameExists(username: string): Promise<boolean> {
-    const user = await prisma.user.findUnique({ where: { username } });
-    console.log(user);
-    return user !== null;
+    return (await prisma.user.findUnique({ where: { username } })) !== null;
   }
 
   private async emailExists(email: string): Promise<boolean> {
