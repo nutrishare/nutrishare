@@ -4,6 +4,6 @@
     "moduleResolution": "Node",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "allowJs": true,
-    "exactOptionalPropertyTypes": false
+    "exactOptionalPropertyTypes": false    
   }
 }
