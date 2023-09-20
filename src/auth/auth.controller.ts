@@ -46,4 +46,11 @@ export default new Elysia({ prefix: "/auth" })
   .get("/me", ({ user }) => user, {
     response: "user.user",
     detail: schemaDetail,
+  })
+  .onError(({ code, error, set }) => {
+    if (code === "UnauthorizedError") {
+      set.status = "Unauthorized";
+      return "youre unauthorized";
+    }
+    throw error;
   });

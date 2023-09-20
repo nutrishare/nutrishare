@@ -1,9 +1,8 @@
 import jwt from "@elysiajs/jwt";
 import { t } from "elysia";
+import appEnv from "../env";
 
-// TODO: Handle env variables better
-// biome-ignore lint: Temporary unwrap
-const jwtSecret = Bun.env["JWT_SECRET"]!;
+const jwtSecret = appEnv.JWT_SECRET;
 
 export default jwt({
   name: "jwt",
