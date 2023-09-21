@@ -20,8 +20,6 @@
   "devDependencies": {
     "@biomejs/biome": "^1.2.2",
     "@nutrishare/tsconfig": "workspace:*",
-    "@tsconfig/bun": "^1.0.1",
-    "@tsconfig/strictest": "^2.0.2",
     "@tsconfig/vite-react": "^2.0.1",
     "@types/react": "^18.2.22",
     "@types/react-dom": "^18.2.7",
@@ -36,6 +34,7 @@
   "main": "src/index.ts",
   "type": "module",
   "peerDependencies": {
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "@sinclair/typebox": "~0.31"
   }
 }
