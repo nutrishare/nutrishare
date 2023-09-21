@@ -1,0 +1,41 @@
+{
+  "name": "@nutrishare/backend",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "bun run src/index.ts",
+    "dev": "bun run --watch src/index.ts"
+  },
+  "dependencies": {
+    "@elysiajs/cors": "^0.7.0",
+    "@elysiajs/eden": "0.7.1",
+    "@elysiajs/jwt": "0.7.0",
+    "@elysiajs/swagger": "0.7.2",
+    "@prisma/client": "5.3.1",
+    "elysia": "0.7.6",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "vite-plugin-ssr": "^0.4.141"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.2.2",
+    "@nutrishare/tsconfig": "workspace:*",
+    "@tsconfig/bun": "^1.0.1",
+    "@tsconfig/strictest": "^2.0.2",
+    "@tsconfig/vite-react": "^2.0.1",
+    "@types/react": "^18.2.22",
+    "@types/react-dom": "^18.2.7",
+    "@vitejs/plugin-react": "^4.0.4",
+    "bun-types": "latest",
+    "prettier": "^3.0.3",
+    "prisma": "latest",
+    "typescript": "^5.2.2",
+    "vite": "^4.4.9"
+  },
+  "module": "src/index.ts",
+  "main": "src/index.ts",
+  "type": "module",
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
