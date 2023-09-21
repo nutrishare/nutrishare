@@ -3,7 +3,8 @@
   "private": true,
   "module": "index.ts",
   "scripts": {
-    "dev": "turbo run dev --parallel"
+    "dev": "turbo run dev --parallel",
+    "turbo": "turbo"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.2.2",

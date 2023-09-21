@@ -4,6 +4,10 @@
   "main": "./src/index.ts",
   "types": "./src/index.ts",
   "type": "module",
+  "scripts": {
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push --skip-generate"
+  },
   "dependencies": {
     "@prisma/client": "5.3.1"
   },
