@@ -1,0 +1,3 @@
+{
+  "extends": ["@nutrishare/tsconfig/base.json"]
+}

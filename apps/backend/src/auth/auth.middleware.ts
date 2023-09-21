@@ -1,6 +1,6 @@
 import Elysia from "elysia";
 import jwt from "../plugins/jwt.plugin";
-import { prisma } from "../prisma";
+import { prisma } from "@nutrishare/db";
 
 class UnauthorizedError extends Error {}
 
