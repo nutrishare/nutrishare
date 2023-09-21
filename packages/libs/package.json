@@ -1,0 +1,16 @@
+{
+  "name": "@nutrishare/libs",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "type": "module",
+  "devDependencies": {
+    "bun-types": "latest",
+    "@nutrishare/tsconfig": "workspace:*",
+    "@nutrishare/backend": "workspace:*"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0",
+    "@elysia/eden": "~0.7"
+  }
+}
