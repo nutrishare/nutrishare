@@ -1,0 +1,18 @@
+{
+  "name": "@nutrishare/db",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "type": "module",
+  "dependencies": {
+    "@prisma/client": "5.3.1"
+  },
+  "devDependencies": {
+    "@nutrishare/tsconfig": "workspace:*",
+    "bun-types": "latest",
+    "prisma": "^5.3.1"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
