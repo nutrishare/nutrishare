@@ -1,9 +1,14 @@
 import { Type, Static } from "@sinclair/typebox";
 import { Value } from "@sinclair/typebox/value";
 
+const SpaceSeparatedArray = Type.Transform(Type.String())
+  .Decode((value) => value.split(" "))
+  .Encode((value) => value.join(" "));
+
 const Env = Type.Object({
   JWT_SECRET: Type.String(),
   NODE_ENV: Type.Optional(Type.Union([Type.Literal("PRODUCTION")])),
+  CORS_ALLOWED_ORIGINS: Type.Optional(SpaceSeparatedArray),
 });
 
 type Env = Static<typeof Env>;
