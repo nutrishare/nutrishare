@@ -1,7 +1,6 @@
 import Elysia from "elysia";
-import swagger from "./plugins/swagger.plugin";
+import { jwt, swagger } from "./plugins";
 // import auth from "./auth/auth.controller";
-import jwt from "./plugins/jwt.plugin";
 
 const app = new Elysia()
   .use(swagger)
