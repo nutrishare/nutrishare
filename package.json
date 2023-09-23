@@ -4,7 +4,8 @@
   "module": "index.ts",
   "scripts": {
     "dev": "turbo run dev --parallel",
-    "turbo": "turbo"
+    "turbo": "turbo",
+    "db:generate": "turbo db:generate"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.2.2",
