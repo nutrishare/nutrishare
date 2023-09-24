@@ -1,6 +1,6 @@
 import { Elysia } from "elysia";
 import AuthService from "./auth.service";
-import jwt from "../plugins/jwt.plugin";
+import { jwt } from "../plugins";
 import authMiddleware from "./auth.middleware";
 import { userModel } from "../user/user.model";
 import { authModel } from "./auth.model";
