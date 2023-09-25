@@ -11,10 +11,31 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
+  id        String   @id @unique @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   username  String   @unique
-  email     String   @unique
-  password  String
+  email     String?  @unique
+
+  authKey AuthKey[]
 }
+
+model AuthKey {
+  id              String  @id
+  user_id         String
+  user            User    @relation(fields: [user_id], references: [id])
+  hashed_password String?
+
+  @@index([user_id])
+}
+
+// NOTE: This model doesn't seem to be required by lucia
+// model AuthSession {
+//   id             String @id @unique
+//   user_id        String
+//   user           User   @relation(fields: [user_id], references: [id])
+//   active_expires BigInt
+//   idle_expires   BigInt
+//
+//   @@index([user_id])
+// }

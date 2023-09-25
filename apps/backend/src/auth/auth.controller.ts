@@ -4,12 +4,14 @@ import { jwt } from "../plugins";
 import authMiddleware from "./auth.middleware";
 import { userModel } from "../user/user.model";
 import { authModel } from "./auth.model";
+import githubAuth from "./github.auth.controller";
 
 const schemaDetail = {
   tags: ["Auth"],
 };
 
-export default new Elysia({ prefix: "/auth" })
+// TODO: Add password auth (use lucia)
+const passwordAuth = new Elysia({ prefix: "/auth" })
   .use(jwt)
   .decorate("getAuthService", () => new AuthService())
   .use(authModel)
@@ -53,4 +55,13 @@ export default new Elysia({ prefix: "/auth" })
       return "youre unauthorized";
     }
     throw error;
+  });
+
+export default new Elysia({ prefix: "/auth" })
+  .use(userModel)
+  .use(githubAuth)
+  .use(authMiddleware)
+  .get("/me", ({ user }) => user, {
+    response: "user.user",
+    detail: schemaDetail,
   });

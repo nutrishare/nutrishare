@@ -9,6 +9,8 @@ const Env = Type.Object({
   JWT_SECRET: Type.String(),
   NODE_ENV: Type.Optional(Type.Union([Type.Literal("PRODUCTION")])),
   CORS_ALLOWED_ORIGINS: Type.Optional(SpaceSeparatedArray),
+  GITHUB_CLIENT_ID: Type.String(),
+  GITHUB_CLIENT_SECRET: Type.String(),
 });
 
 type Env = Static<typeof Env>;

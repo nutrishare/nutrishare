@@ -4,32 +4,31 @@ import { prisma } from "@nutrishare/db";
 
 class UnauthorizedError extends Error {}
 
-const authMiddleware = new Elysia()
+export default new Elysia()
   .use(jwt)
-  .addError({
+  .error({
     UnauthorizedError,
   })
-  .derive(async ({ jwt, headers, set }) => {
+  .derive(async ({ jwt, headers }) => {
     // biome-ignore lint: Valid Record access
     const accessToken = headers["authorization"]?.split(" ")[1];
-    if (!accessToken) {
-      set.status = 401;
-      throw new UnauthorizedError();
-    }
+    if (!accessToken) throw new UnauthorizedError();
 
-    const result = await jwt.verify(accessToken);
-    if (!result) {
-      set.status = 401;
-      throw new UnauthorizedError();
-    }
+    const jwtPayload = await jwt.verify(accessToken);
+    if (!jwtPayload) throw new UnauthorizedError();
 
-    const { id } = result;
+    const { id } = jwtPayload;
     const user = await prisma.user.findFirst({ where: { id } });
-    if (!user) {
-      set.status = 401;
-      throw new UnauthorizedError();
-    }
+    if (!user) throw new UnauthorizedError();
 
     return { user };
+  })
+  .onError(({ code, error, set }) => {
+    if (code === "UnauthorizedError") {
+      set.status = "Unauthorized";
+      // biome-ignore lint: Valid Record set
+      set.headers["Authenticate"] = "Bearer";
+      return "Unauthorized";
+    }
+    throw error;
   });
-export default authMiddleware;

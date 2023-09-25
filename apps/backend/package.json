@@ -7,12 +7,16 @@
     "dev": "bun run --watch src/index.ts"
   },
   "dependencies": {
+    "@elysiajs/cookie": "^0.7.0",
     "@elysiajs/cors": "^0.7.0",
     "@elysiajs/eden": "0.7.1",
     "@elysiajs/jwt": "0.7.0",
     "@elysiajs/swagger": "0.7.2",
     "@nutrishare/db": "workspace:*",
-    "elysia": "0.7.6"
+    "elysia": "0.7.13",
+    "@lucia-auth/adapter-prisma": "^3.0.1",
+    "@lucia-auth/oauth": "^3.3.0",
+    "lucia": "^2.7.0"
   },
   "devDependencies": {
     "@nutrishare/tsconfig": "workspace:*",
