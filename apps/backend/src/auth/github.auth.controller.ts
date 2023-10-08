@@ -1,34 +1,56 @@
 import { Elysia, t } from "elysia";
+import { jwt } from "../plugins";
 import { githubAuth } from "../lucia";
-import cookie from "@elysiajs/cookie";
 import { randomUUID as uuidv4 } from "crypto";
+import cookie from "@elysiajs/cookie";
 
-export default new Elysia()
+const schemaDetail = {
+  tags: ["Auth"],
+};
+
+export default new Elysia({ prefix: "/github" })
   .use(cookie())
+  .use(jwt)
   .get(
-    "/login/github",
+    "/authorize",
     async ({ set, setCookie }) => {
       const [authUrl, authState] = await githubAuth.getAuthorizationUrl();
-
-      setCookie("githubOauthState", authState, {
-        path: "/",
-        httpOnly: true,
-        maxAge: 60 * 60,
-      });
+      // FIXME: Set secure=true when we have HTTPS (maybe with env=PRODUCTION set?)
+      setCookie("githubAuthState", authState, { maxAge: 60 });
       set.redirect = authUrl.toString();
     },
     {
-      cookie: t.Cookie({
-        githubOauthState: t.String(),
-      }),
+      detail: {
+        ...schemaDetail,
+        responses: {
+          302: {
+            description: "Redirect to GitHub authorization page",
+          },
+        },
+      },
     },
   )
   .get(
-    "/login/github/callback",
-    async ({ query: { code, state }, set, cookie: { githubOauthState } }) => {
-      if (githubOauthState.toString() !== state) {
-        set.status = 400;
-        throw new Error("Invalid value of the `githubOauthState` cookie");
+    "/callback",
+    async ({
+      set,
+      query: { code, state },
+      cookie: { githubAuthState },
+      jwt,
+    }) => {
+      // NOTE: Maybe instead of throwing an error here,
+      // we should redirect the user to an error callback on the frontend?
+      // This could be customizable with a param to `/authorize`
+      // and fall back to the current behavior if not provided.
+      if (!githubAuthState) {
+        set.status = "Unauthorized";
+        // FIXME: Don't throw raw errors
+        throw new Error("Missing `githubAuthState` cookie");
+      }
+      if (githubAuthState.toString() !== state) {
+        set.status = "Unauthorized";
+        // FIXME: Don't throw raw errors
+        throw new Error("Invalid value of the `githubAuthState` cookie");
       }
 
       const { getExistingUser, githubUser, createUser } =
@@ -46,7 +68,13 @@ export default new Elysia()
         });
       };
 
-      return await getUser();
+      const user = await getUser();
+      const accessToken = await jwt.sign({
+        id: user.userId,
+        sub: user.githubUsername,
+      });
+      // TODO: Frontend address should be configurable via a query param to `/authorize`
+      set.redirect = `http://localhost:3000/auth/callback?token=${accessToken}`;
     },
     {
       query: t.Object({
@@ -54,7 +82,16 @@ export default new Elysia()
         state: t.String(),
       }),
       cookie: t.Cookie({
-        githubOauthState: t.String(),
+        githubAuthState: t.String(),
       }),
+      detail: {
+        ...schemaDetail,
+        responses: {
+          302: {
+            description:
+              "Redirect to http://localhost:3000/auth/callback?token=accessToken",
+          },
+        },
+      },
     },
   );
