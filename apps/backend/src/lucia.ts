@@ -4,6 +4,14 @@ import { elysia } from "lucia/middleware";
 import { prisma } from "@nutrishare/db";
 import { github } from "@lucia-auth/oauth/providers";
 import appEnv from "./env";
+import { hashPassword, verifyPassword } from "./auth/util";
+
+type UserAttributes = {
+  createdAt: Date;
+  updatedAt: Date;
+  username: string;
+  email: string;
+};
 
 export const auth = lucia({
   env: "DEV", // TODO: Allow "PROD"
@@ -13,9 +21,16 @@ export const auth = lucia({
     key: "authKey",
     session: null,
   }),
-  getUserAttributes: (data) => ({
-    githubUsername: data.username,
+  getUserAttributes: (data): UserAttributes => ({
+    createdAt: data.createdAt,
+    updatedAt: data.updatedAt,
+    username: data.username,
+    email: data.email,
   }),
+  passwordHash: {
+    generate: hashPassword,
+    validate: verifyPassword,
+  },
 });
 
 export const githubAuth = github(auth, {

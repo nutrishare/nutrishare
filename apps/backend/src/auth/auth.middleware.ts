@@ -1,8 +1,7 @@
 import Elysia from "elysia";
 import { jwt } from "../plugins";
 import { prisma } from "@nutrishare/db";
-
-class UnauthorizedError extends Error {}
+import { UnauthorizedError } from "./errors";
 
 export default new Elysia()
   .use(jwt)

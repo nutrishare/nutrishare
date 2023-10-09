@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -28,14 +25,3 @@ model AuthKey {
 
   @@index([user_id])
 }
-
-// NOTE: This model doesn't seem to be required by lucia
-// model AuthSession {
-//   id             String @id @unique
-//   user_id        String
-//   user           User   @relation(fields: [user_id], references: [id])
-//   active_expires BigInt
-//   idle_expires   BigInt
-//
-//   @@index([user_id])
-// }

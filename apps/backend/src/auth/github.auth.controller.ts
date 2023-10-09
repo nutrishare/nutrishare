@@ -71,7 +71,7 @@ export default new Elysia({ prefix: "/github" })
       const user = await getUser();
       const accessToken = await jwt.sign({
         id: user.userId,
-        sub: user.githubUsername,
+        sub: user.username,
       });
       // TODO: Frontend address should be configurable via a query param to `/authorize`
       set.redirect = `http://localhost:3000/auth/callback?token=${accessToken}`;

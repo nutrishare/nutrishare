@@ -1,5 +1,5 @@
 import { prisma, type User } from "@nutrishare/db";
-import { hashPassword, verifyPassword } from "./utils";
+import { hashPassword, verifyPassword } from "./util";
 
 type RegisterParams = {
   username: string;

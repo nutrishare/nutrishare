@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import "./App.css";
 
 const App = () => {
@@ -6,9 +7,12 @@ const App = () => {
       <h1>NutriShare</h1>
 
       <div>
-        <a href="http://localhost:8080/api/auth/github/authorize">
-          Continue with GitHub
-        </a>
+        <Link to="/auth/login">
+          <button type="button">Login</button>
+        </Link>
+        <Link to="/auth/register">
+          <button type="button">Register</button>
+        </Link>
       </div>
     </>
   );

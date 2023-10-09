@@ -17,7 +17,7 @@ importers:
         version: 1.2.2
       bun-types:
         specifier: latest
-        version: 1.0.4-canary.20231004T140131
+        version: 1.0.5-canary.20231009T140142
       turbo:
         specifier: ^1.10.14
         version: 1.10.14
@@ -63,7 +63,7 @@ importers:
         version: link:../../packages/tsconfig
       bun-types:
         specifier: latest
-        version: 1.0.4-canary.20231004T140131
+        version: 1.0.5-canary.20231009T140142
       typescript:
         specifier: ^5.2.2
         version: 5.2.2
@@ -82,6 +82,9 @@ importers:
       react-dom:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
+      react-hook-form:
+        specifier: ^7.47.0
+        version: 7.47.0(react@18.2.0)
       react-router-dom:
         specifier: ^6.16.0
         version: 6.16.0(react-dom@18.2.0)(react@18.2.0)
@@ -134,7 +137,7 @@ importers:
         version: link:../tsconfig
       bun-types:
         specifier: latest
-        version: 1.0.4-canary.20231004T140131
+        version: 1.0.5-canary.20231009T140142
       prisma:
         specifier: ^5.3.1
         version: 5.3.1
@@ -156,7 +159,7 @@ importers:
         version: link:../tsconfig
       bun-types:
         specifier: latest
-        version: 1.0.4-canary.20231004T140131
+        version: 1.0.5-canary.20231009T140142
 
   packages/tsconfig:
     devDependencies:
@@ -1008,8 +1011,8 @@ packages:
       fill-range: 7.0.1
     dev: true
 
-  /bun-types@1.0.4-canary.20231004T140131:
-    resolution: {integrity: sha512-k9DSGP8+mJTJHY/87Q2NqixeXRw04mgIHDSIi29D/bhOu7HqZbO1l+48/aiS8miUpj59ZgJVgpSi+Px33yMCJQ==}
+  /bun-types@1.0.5-canary.20231009T140142:
+    resolution: {integrity: sha512-5hT8WBXZ2ozdJt6s0nnnh4iQXn6xp9a7spbRYjapNxKjR3ckS5U2V347H3+XpaMVzc/a7D2I2KnKqIPO1R82kg==}
     dev: true
 
   /callsites@3.1.0:
@@ -1696,6 +1699,15 @@ packages:
       loose-envify: 1.4.0
       react: 18.2.0
       scheduler: 0.23.0
+    dev: false
+
+  /react-hook-form@7.47.0(react@18.2.0):
+    resolution: {integrity: sha512-F/TroLjTICipmHeFlMrLtNLceO2xr1jU3CyiNla5zdwsGUGu2UOxxR4UyJgLlhMwLW/Wzp4cpJ7CPfgJIeKdSg==}
+    engines: {node: '>=12.22.0'}
+    peerDependencies:
+      react: ^16.8.0 || ^17 || ^18
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /react-is@16.13.1:
