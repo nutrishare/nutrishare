@@ -3,6 +3,7 @@ import { jwt } from "../plugins";
 import { githubAuth } from "../lucia";
 import { randomUUID as uuidv4 } from "crypto";
 import cookie from "@elysiajs/cookie";
+import { UnauthorizedError } from "../errors";
 
 const schemaDetail = {
   tags: ["Auth"],

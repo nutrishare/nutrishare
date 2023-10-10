@@ -1,7 +1,7 @@
 import Elysia from "elysia";
 import { jwt } from "../plugins";
 import { prisma } from "@nutrishare/db";
-import { UnauthorizedError } from "./errors";
+import { UnauthorizedError } from "../errors";
 
 export default new Elysia()
   .use(jwt)
@@ -25,8 +25,7 @@ export default new Elysia()
   .onError(({ code, error, set }) => {
     if (code === "UnauthorizedError") {
       set.status = "Unauthorized";
-      // biome-ignore lint: Valid Record set
-      set.headers["Authenticate"] = "Bearer";
+      set.headers["WWW-Authenticate"] = "Bearer";
       return "Unauthorized";
     }
     throw error;

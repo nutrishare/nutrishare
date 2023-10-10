@@ -4,7 +4,7 @@ import { jwt } from "../plugins";
 import { userModel } from "../user/user.model";
 import { authModel } from "./auth.model";
 import { randomUUID as uuidv4 } from "crypto";
-import { UnauthorizedError } from "./errors";
+import { UnauthorizedError } from "../errors";
 import { auth } from "../lucia";
 
 const schemaDetail = {
