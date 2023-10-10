@@ -84,7 +84,7 @@ export default new Elysia({ prefix: "/local" })
   .onError(({ code, error, set }) => {
     if (code === "UnauthorizedError") {
       set.status = "Unauthorized";
-      return "Unauthorized";
+      return error.message;
     }
     throw error;
   });
