@@ -4,6 +4,7 @@ import { githubAuth } from "../lucia";
 import { randomUUID as uuidv4 } from "crypto";
 import cookie from "@elysiajs/cookie";
 import { UnauthorizedError } from "../errors";
+import { OAuthRequestError } from "@lucia-auth/oauth";
 
 const schemaDetail = {
   tags: ["Auth"],
@@ -12,6 +13,9 @@ const schemaDetail = {
 export default new Elysia({ prefix: "/github" })
   .use(cookie())
   .use(jwt)
+  .error({
+    UnauthorizedError,
+  })
   .get(
     "/authorize",
     async ({ set, setCookie }) => {
@@ -39,43 +43,47 @@ export default new Elysia({ prefix: "/github" })
       cookie: { githubAuthState },
       jwt,
     }) => {
-      // NOTE: Maybe instead of throwing an error here,
-      // we should redirect the user to an error callback on the frontend?
+      // TODO: Instead of throwing an error here,
+      // we should redirect the user to an error callback on the frontend.
       // This could be customizable with a param to `/authorize`
       // and fall back to the current behavior if not provided.
       if (!githubAuthState) {
-        set.status = "Unauthorized";
-        // FIXME: Don't throw raw errors
-        throw new Error("Missing `githubAuthState` cookie");
+        throw new UnauthorizedError(`Missing cookie 'githubAuthState'`);
       }
       if (githubAuthState.toString() !== state) {
-        set.status = "Unauthorized";
-        // FIXME: Don't throw raw errors
-        throw new Error("Invalid value of the `githubAuthState` cookie");
+        throw new UnauthorizedError(
+          "The 'state' query param doesn't match the 'githubAuthState' cookie",
+        );
       }
 
-      const { getExistingUser, githubUser, createUser } =
-        await githubAuth.validateCallback(code);
+      try {
+        const { getExistingUser, githubUser, createUser } =
+          await githubAuth.validateCallback(code);
 
-      const getUser = async () => {
-        const existingUser = await getExistingUser();
-        if (existingUser) return existingUser;
+        const getUser = async () => {
+          const existingUser = await getExistingUser();
+          if (existingUser) return existingUser;
 
-        return createUser({
-          userId: uuidv4(),
-          attributes: {
-            username: githubUser.login,
-          },
+          return createUser({
+            userId: uuidv4(),
+            attributes: {
+              username: githubUser.login,
+            },
+          });
+        };
+
+        const user = await getUser();
+        const accessToken = await jwt.sign({
+          id: user.userId,
+          sub: user.username,
         });
-      };
-
-      const user = await getUser();
-      const accessToken = await jwt.sign({
-        id: user.userId,
-        sub: user.username,
-      });
-      // TODO: Frontend address should be configurable via a query param to `/authorize`
-      set.redirect = `http://localhost:3000/auth/callback?token=${accessToken}`;
+        // TODO: Frontend address should be configurable via a query param to `/authorize`
+        set.redirect = `http://localhost:3000/auth/callback?token=${accessToken}`;
+      } catch (e) {
+        if (e instanceof OAuthRequestError) {
+          throw new UnauthorizedError("Invalid GitHub authorization code");
+        }
+      }
     },
     {
       query: t.Object({
@@ -95,4 +103,11 @@ export default new Elysia({ prefix: "/github" })
         },
       },
     },
-  );
+  )
+  .onError(({ code, error, set }) => {
+    if (code === "UnauthorizedError") {
+      set.status = "Unauthorized";
+      return error.message;
+    }
+    throw error;
+  });
