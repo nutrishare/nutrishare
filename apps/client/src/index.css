@@ -81,6 +81,12 @@ form {
   }
 }
 
+.external-auth {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

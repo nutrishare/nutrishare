@@ -11,6 +11,8 @@ const Env = Type.Object({
   CORS_ALLOWED_ORIGINS: Type.Optional(SpaceSeparatedArray),
   GITHUB_CLIENT_ID: Type.String(),
   GITHUB_CLIENT_SECRET: Type.String(),
+  GOOGLE_CLIENT_ID: Type.String(),
+  GOOGLE_CLIENT_SECRET: Type.String(),
 });
 
 type Env = Static<typeof Env>;

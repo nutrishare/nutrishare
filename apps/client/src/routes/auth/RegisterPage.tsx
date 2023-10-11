@@ -82,9 +82,14 @@ const RegisterPage = () => {
       </form>
 
       <h2>Sign in via an external service</h2>
-      <a href="http://localhost:8080/api/auth/github/authorize">
-        <button type="button">Continue with GitHub</button>
-      </a>
+      <div className="external-auth">
+        <a href="http://localhost:8080/api/auth/google/authorize">
+          <button type="button">Continue with GitHub</button>
+        </a>
+        <a href="http://localhost:8080/api/auth/github/authorize">
+          <button type="button">Continue with GitHub</button>
+        </a>
+      </div>
 
       <h2>Have an account already?</h2>
       <Link to="/auth/login">
