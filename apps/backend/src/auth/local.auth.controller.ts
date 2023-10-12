@@ -113,22 +113,4 @@ export default new Elysia({ prefix: "/local" })
       response: { 201: "auth.token" },
       detail: schemaDetail,
     },
-  )
-  .onError(({ code, error, set }) => {
-    if (code === "BadRequestError") {
-      set.status = "Bad Request";
-      return error.message;
-    }
-
-    if (code === "ConflictError") {
-      set.status = "Conflict";
-      return error.message;
-    }
-
-    if (code === "UnauthorizedError") {
-      set.status = "Unauthorized";
-      return error.message;
-    }
-
-    throw error;
-  });
+  );

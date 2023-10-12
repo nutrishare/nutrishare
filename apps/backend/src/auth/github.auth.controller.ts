@@ -103,11 +103,4 @@ export default new Elysia({ prefix: "/github" })
         },
       },
     },
-  )
-  .onError(({ code, error, set }) => {
-    if (code === "UnauthorizedError") {
-      set.status = "Unauthorized";
-      return error.message;
-    }
-    throw error;
-  });
+  );

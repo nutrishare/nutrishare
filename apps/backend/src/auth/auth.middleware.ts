@@ -21,12 +21,4 @@ export default new Elysia()
     if (!user) throw new UnauthorizedError();
 
     return { user };
-  })
-  .onError(({ code, error, set }) => {
-    if (code === "UnauthorizedError") {
-      set.status = "Unauthorized";
-      set.headers["WWW-Authenticate"] = "Bearer";
-      return error.message;
-    }
-    throw error;
   });

@@ -102,11 +102,4 @@ export default new Elysia({ prefix: "/google" })
         },
       },
     },
-  )
-  .onError(({ code, error, set }) => {
-    if (code === "UnauthorizedError") {
-      set.status = "Unauthorized";
-      return error.message;
-    }
-    throw error;
-  });
+  );
