@@ -68,6 +68,7 @@ export default new Elysia({ prefix: "/github" })
             userId: uuidv4(),
             attributes: {
               username: githubUser.login,
+              email: githubUser.email,
             },
           });
         };
