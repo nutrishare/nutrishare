@@ -9,6 +9,13 @@ const Env = Type.Object({
   JWT_SECRET: Type.String(),
   NODE_ENV: Type.Optional(Type.Union([Type.Literal("PRODUCTION")])),
   CORS_ALLOWED_ORIGINS: Type.Optional(SpaceSeparatedArray),
+  FRONTEND_AUTH_SUCCESS_CALLBACK_URL: Type.String(),
+  GITHUB_CLIENT_ID: Type.String(),
+  GITHUB_CLIENT_SECRET: Type.String(),
+  GITHUB_CALLBACK_REDIRECT_URL: Type.String(),
+  GOOGLE_CLIENT_ID: Type.String(),
+  GOOGLE_CLIENT_SECRET: Type.String(),
+  GOOGLE_CALLBACK_REDIRECT_URL: Type.String(),
 });
 
 type Env = Static<typeof Env>;

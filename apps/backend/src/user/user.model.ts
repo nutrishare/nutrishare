@@ -5,8 +5,7 @@ const User = t.Object({
   createdAt: t.Date(),
   updatedAt: t.Date(),
   username: t.String(),
-  email: t.String(),
-  password: t.String(), // TODO: Don't return password
+  email: t.Union([t.String(), t.Null()]),
 });
 
 export const userModel = new Elysia().model({

@@ -17,25 +17,34 @@ importers:
         version: 1.2.2
       bun-types:
         specifier: latest
-        version: 1.0.3
+        version: 1.0.5-canary.20231009T140142
       turbo:
         specifier: ^1.10.14
         version: 1.10.14
 
   apps/backend:
     dependencies:
+      '@elysiajs/cookie':
+        specifier: ^0.7.0
+        version: 0.7.0(elysia@0.7.13)
       '@elysiajs/cors':
         specifier: ^0.7.0
-        version: 0.7.0(elysia@0.7.6)
+        version: 0.7.0(elysia@0.7.13)
       '@elysiajs/eden':
         specifier: 0.7.1
-        version: 0.7.1(elysia@0.7.6)
+        version: 0.7.1(@sinclair/typebox@0.31.15)(elysia@0.7.13)
       '@elysiajs/jwt':
         specifier: 0.7.0
-        version: 0.7.0(elysia@0.7.6)
+        version: 0.7.0(elysia@0.7.13)
       '@elysiajs/swagger':
         specifier: 0.7.2
-        version: 0.7.2(elysia@0.7.6)
+        version: 0.7.2(elysia@0.7.13)
+      '@lucia-auth/adapter-prisma':
+        specifier: ^3.0.1
+        version: 3.0.1(@prisma/client@5.3.1)(lucia@2.7.0)
+      '@lucia-auth/oauth':
+        specifier: ^3.3.0
+        version: 3.3.0(lucia@2.7.0)
       '@nutrishare/db':
         specifier: workspace:*
         version: link:../../packages/db
@@ -43,15 +52,18 @@ importers:
         specifier: ~0.31
         version: 0.31.15
       elysia:
-        specifier: 0.7.6
-        version: 0.7.6(typescript@5.2.2)
+        specifier: 0.7.13
+        version: 0.7.13(@sinclair/typebox@0.31.15)(typescript@5.2.2)
+      lucia:
+        specifier: ^2.7.0
+        version: 2.7.0
     devDependencies:
       '@nutrishare/tsconfig':
         specifier: workspace:*
         version: link:../../packages/tsconfig
       bun-types:
         specifier: latest
-        version: 1.0.3
+        version: 1.0.5-canary.20231009T140142
       typescript:
         specifier: ^5.2.2
         version: 5.2.2
@@ -64,9 +76,18 @@ importers:
       react:
         specifier: ^18.2.0
         version: 18.2.0
+      react-cookie:
+        specifier: ^6.1.1
+        version: 6.1.1(react@18.2.0)
       react-dom:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
+      react-hook-form:
+        specifier: ^7.47.0
+        version: 7.47.0(react@18.2.0)
+      react-router-dom:
+        specifier: ^6.16.0
+        version: 6.16.0(react-dom@18.2.0)(react@18.2.0)
     devDependencies:
       '@nutrishare/tsconfig':
         specifier: workspace:^
@@ -116,7 +137,7 @@ importers:
         version: link:../tsconfig
       bun-types:
         specifier: latest
-        version: 1.0.3
+        version: 1.0.5-canary.20231009T140142
       prisma:
         specifier: ^5.3.1
         version: 5.3.1
@@ -125,7 +146,7 @@ importers:
     dependencies:
       '@elysiajs/eden':
         specifier: ~0.7
-        version: 0.7.1(elysia@0.7.6)
+        version: 0.7.1(@sinclair/typebox@0.31.15)(elysia@0.7.13)
       typescript:
         specifier: ^5.0.0
         version: 5.2.2
@@ -138,7 +159,7 @@ importers:
         version: link:../tsconfig
       bun-types:
         specifier: latest
-        version: 1.0.3
+        version: 1.0.5-canary.20231009T140142
 
   packages/tsconfig:
     devDependencies:
@@ -224,15 +245,27 @@ packages:
     dev: true
     optional: true
 
-  /@elysiajs/cors@0.7.0(elysia@0.7.6):
+  /@elysiajs/cookie@0.7.0(elysia@0.7.13):
+    resolution: {integrity: sha512-GCDjClpaOYLSaugLc3HLS5kAhghpubJfvkFn9ZIsgQzkpUk4vJLLVUFbPm5FrqgUo71VaQAAGKJm5OhRRWQT+w==}
+    peerDependencies:
+      elysia: '>= 0.7.0'
+    dependencies:
+      '@types/cookie': 0.5.2
+      '@types/cookie-signature': 1.1.0
+      cookie: 0.5.0
+      cookie-signature: 1.2.1
+      elysia: 0.7.13(@sinclair/typebox@0.31.15)(typescript@5.2.2)
+    dev: false
+
+  /@elysiajs/cors@0.7.0(elysia@0.7.13):
     resolution: {integrity: sha512-BOR7FyIdE5WE+LzFBSOY/yTnl8+56UiIaSanQr61gL1UGbqsNRqR+L1XOV7GPMsxiWBY+m/1nnXYlIvAZ1NmWg==}
     peerDependencies:
       elysia: '>= 0.7.0'
     dependencies:
-      elysia: 0.7.6(typescript@5.2.2)
+      elysia: 0.7.13(@sinclair/typebox@0.31.15)(typescript@5.2.2)
     dev: false
 
-  /@elysiajs/eden@0.7.1(elysia@0.7.6):
+  /@elysiajs/eden@0.7.1(@sinclair/typebox@0.31.15)(elysia@0.7.13):
     resolution: {integrity: sha512-t9IxXf+U5bI9T1Pc+NWr6OqcTS0rLvcWrlqX4tJto9FzWB44waFEughCUn/UtQ8mAG1CWWISCkzgV/M7Yi4R9Q==}
     peerDependencies:
       '@sinclair/typebox': '*'
@@ -241,25 +274,26 @@ packages:
       '@sinclair/typebox':
         optional: true
     dependencies:
-      elysia: 0.7.6(typescript@5.2.2)
+      '@sinclair/typebox': 0.31.15
+      elysia: 0.7.13(@sinclair/typebox@0.31.15)(typescript@5.2.2)
     dev: false
 
-  /@elysiajs/jwt@0.7.0(elysia@0.7.6):
+  /@elysiajs/jwt@0.7.0(elysia@0.7.13):
     resolution: {integrity: sha512-4CcW0AnpZF/r/7PyBhQS1Nlr4q/CGNBs5QYtfHgCYQZjZ/pR7XqKJIZs0bvNbxEdgPcRjr9JQx2crR6O2yEt4w==}
     peerDependencies:
       elysia: '>= 0.7.0'
     dependencies:
-      elysia: 0.7.6(typescript@5.2.2)
+      elysia: 0.7.13(@sinclair/typebox@0.31.15)(typescript@5.2.2)
       jose: 4.14.6
     dev: false
 
-  /@elysiajs/swagger@0.7.2(elysia@0.7.6):
+  /@elysiajs/swagger@0.7.2(elysia@0.7.13):
     resolution: {integrity: sha512-KD6czK/Kt/1efA1WKAiiscwbe19KiSI8mOogwMatwEw+O6ggfCsC2fcHkF19v+NER+A3xdGyrtI/U+68RLHt+A==}
     peerDependencies:
       elysia: '>= 0.7.0'
     dependencies:
       '@types/lodash.clonedeep': 4.5.7
-      elysia: 0.7.6(typescript@5.2.2)
+      elysia: 0.7.13(@sinclair/typebox@0.31.15)(typescript@5.2.2)
       lodash.clonedeep: 4.5.0
       openapi-types: 12.1.3
     dev: false
@@ -519,6 +553,24 @@ packages:
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
     dev: true
 
+  /@lucia-auth/adapter-prisma@3.0.1(@prisma/client@5.3.1)(lucia@2.7.0):
+    resolution: {integrity: sha512-JZNl+721M5ApjtNiH+WUYstiC8cffcI/Y9IzKsa0uUhQMIHl2ObCrgO0R3fgHnjWHBjhQoK36g/r/iSJIDppBA==}
+    peerDependencies:
+      '@prisma/client': ^4.2.0 || ^5.0.0
+      lucia: ^2.0.0
+    dependencies:
+      '@prisma/client': 5.3.1(prisma@5.3.1)
+      lucia: 2.7.0
+    dev: false
+
+  /@lucia-auth/oauth@3.3.0(lucia@2.7.0):
+    resolution: {integrity: sha512-vb9BBcZXOeeijGndnvq/AoJJZU6MAKG7UCqV1n9tQ81edSPaWZWsxSDrDjmNFrY0tSyATZMWo/LXbzt/WQdKdA==}
+    peerDependencies:
+      lucia: ^2.0.0
+    dependencies:
+      lucia: 2.7.0
+    dev: false
+
   /@nodelib/fs.scandir@2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
     engines: {node: '>= 8'}
@@ -561,6 +613,11 @@ packages:
   /@prisma/engines@5.3.1:
     resolution: {integrity: sha512-6QkILNyfeeN67BNEPEtkgh3Xo2tm6D7V+UhrkBbRHqKw9CTaz/vvTP/ROwYSP/3JT2MtIutZm/EnhxUiuOPVDA==}
     requiresBuild: true
+
+  /@remix-run/router@1.9.0:
+    resolution: {integrity: sha512-bV63itrKBC0zdT27qYm6SDZHlkXwFL1xMBuhkn+X7l0+IIhNaH5wuuvZKp6eKhCD4KFhujhfhCT1YxXW6esUIA==}
+    engines: {node: '>=14.0.0'}
+    dev: false
 
   /@sinclair/typebox@0.31.15:
     resolution: {integrity: sha512-gheE0Z2QWB/EuUwirniP+vq17N0MdQ+9bKyy2lPJzcBin6piBxOrazTYOB18N+oeBwVVepAmlqqo9KbpSl9DOA==}
@@ -692,6 +749,23 @@ packages:
     resolution: {integrity: sha512-jt4jIsWKvUvuY6adJnQJlb/UR7DdjC8CjHI/OaSQruj2yX9/K6+KOvDt/vD6udqos/FUk5Op66CvYT7TBLYO5Q==}
     dev: true
 
+  /@types/cookie-signature@1.1.0:
+    resolution: {integrity: sha512-6/OwJHoeGW5taC2vWq1sz8X7/T2rAPVXj3zQds+rM4b5VrW8lgpYjpDVjTJmkRB1IODBCAiuPXNk092CjYlryQ==}
+    dependencies:
+      '@types/node': 20.6.4
+    dev: false
+
+  /@types/cookie@0.5.2:
+    resolution: {integrity: sha512-DBpRoJGKJZn7RY92dPrgoMew8xCWc2P71beqsjyhEI/Ds9mOyVmBwtekyfhpwFIVt1WrxTonFifiOZ62V8CnNA==}
+    dev: false
+
+  /@types/hoist-non-react-statics@3.3.2:
+    resolution: {integrity: sha512-YIQtIg4PKr7ZyqNPZObpxfHsHEmuB8dXCxd6qVcGuQVDK2bpsF7bYNnBJ4Nn7giuACZg+WewExgrtAJ3XnA4Xw==}
+    dependencies:
+      '@types/react': 18.2.22
+      hoist-non-react-statics: 3.3.2
+    dev: false
+
   /@types/json-schema@7.0.13:
     resolution: {integrity: sha512-RbSSoHliUbnXj3ny0CNFOoxrIDV6SUGyStHsvDqosw6CkdPV8TtWGlfecuK4ToyMEAql6pzNxgCFKanovUzlgQ==}
     dev: true
@@ -706,9 +780,12 @@ packages:
     resolution: {integrity: sha512-trNJ/vtMZYMLhfN45uLq4ShQSw0/S7xCTLLVM+WM1rmFpba/VS42jVUgaO3w/NOLiWR/09lnYk0yMaA/atdIsg==}
     dev: false
 
+  /@types/node@20.6.4:
+    resolution: {integrity: sha512-nU6d9MPY0NBUMiE/nXd2IIoC4OLvsLpwAjheoAeuzgvDZA1Cb10QYg+91AF6zQiKWRN5i1m07x6sMe0niBznoQ==}
+    dev: false
+
   /@types/prop-types@15.7.6:
     resolution: {integrity: sha512-RK/kBbYOQQHLYj9Z95eh7S6t7gq4Ojt/NT8HTk8bWVhA5DaF+5SMnxHKkP4gPNN3wAZkKP+VjAf0ebtYzf+fxg==}
-    dev: true
 
   /@types/react-dom@18.2.7:
     resolution: {integrity: sha512-GRaAEriuT4zp9N4p1i8BDBYmEyfo+xQ3yHjJU4eiK5NDa1RmUZG+unZABUTK4/Ox/M+GaHwb6Ow8rUITrtjszA==}
@@ -722,11 +799,9 @@ packages:
       '@types/prop-types': 15.7.6
       '@types/scheduler': 0.16.3
       csstype: 3.1.2
-    dev: true
 
   /@types/scheduler@0.16.3:
     resolution: {integrity: sha512-5cJ8CB4yAx7BH1oMvdU0Jh9lrEXyPkar6F9G/ERswkCuvP4KQZfZkSjcMbAICCpQTN4OuZn8tz0HiKv9TGZgrQ==}
-    dev: true
 
   /@types/semver@7.5.2:
     resolution: {integrity: sha512-7aqorHYgdNO4DM36stTiGO3DvKoex9TQRwsJU6vMaFGyqpBA1MNZkz+PG3gaNUPpTAOYhT1WR7M1JyA3fbS9Cw==}
@@ -936,8 +1011,8 @@ packages:
       fill-range: 7.0.1
     dev: true
 
-  /bun-types@1.0.3:
-    resolution: {integrity: sha512-XlyKVdYCHa7K5PHYGcwOVOrGE/bMnLS51y7zFA3ZAAXyiQ6dTaNXNCWTTufgII/6ruN770uhAXphQmzvU/r2fQ==}
+  /bun-types@1.0.5-canary.20231009T140142:
+    resolution: {integrity: sha512-5hT8WBXZ2ozdJt6s0nnnh4iQXn6xp9a7spbRYjapNxKjR3ckS5U2V347H3+XpaMVzc/a7D2I2KnKqIPO1R82kg==}
     dev: true
 
   /callsites@3.1.0:
@@ -989,7 +1064,6 @@ packages:
 
   /csstype@3.1.2:
     resolution: {integrity: sha512-I7K1Uu0MBPzaFKg4nI5Q7Vs2t+3gWWW648spaF+Rg7pI9ds18Ugn+lvg4SHczUdKlHI5LWBXyqfS8+DufyBsgQ==}
-    dev: true
 
   /debug@4.3.4:
     resolution: {integrity: sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==}
@@ -1021,8 +1095,8 @@ packages:
       esutils: 2.0.3
     dev: true
 
-  /elysia@0.7.6(typescript@5.2.2):
-    resolution: {integrity: sha512-l6pCa6vTkhJuKGmVD+9XFT6oUR5jiz0YhBAIVQaUI+Lu+BhOVpNJbu4AtCheogXm+eCsQ1D9Ud6YneNn9V5fuA==}
+  /elysia@0.7.13(@sinclair/typebox@0.31.15)(typescript@5.2.2):
+    resolution: {integrity: sha512-GEPgn9iPK/TMnCY3IQ7Rz+3yY3lbg1bH8/hwJzsz+2ZdUVgBjK16DwADE/KKuphu5xdCeOLYcu3z/1ccOAolEQ==}
     peerDependencies:
       '@sinclair/typebox': '>= 0.28.10'
       openapi-types: '>= 12.0.0'
@@ -1035,6 +1109,7 @@ packages:
       typescript:
         optional: true
     dependencies:
+      '@sinclair/typebox': 0.31.15
       cookie: 0.5.0
       cookie-signature: 1.2.1
       eventemitter3: 5.0.1
@@ -1330,6 +1405,12 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
+  /hoist-non-react-statics@3.3.2:
+    resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
+    dependencies:
+      react-is: 16.13.1
+    dev: false
+
   /ignore@5.2.4:
     resolution: {integrity: sha512-MAb38BcSbH0eHNBxn7ql2NH/kX33OkB3lZ1BNdh7ENeRChHTYsTvWrMubiIAMNS2llXEEgZ1MUOBtXChP3kaFQ==}
     engines: {node: '>= 4'}
@@ -1454,6 +1535,10 @@ packages:
     dependencies:
       yallist: 4.0.0
     dev: true
+
+  /lucia@2.7.0:
+    resolution: {integrity: sha512-VwWyG3U3mKUXx7qa5SXAQctBukkLpIW5L/vEVqP2R3mDBQTZIBIAZP/neZl5U6mot7Y9bRQ/2pVKO8djEH1O8A==}
+    dev: false
 
   /memoirist@0.1.4:
     resolution: {integrity: sha512-D6GbPSqO2nUVOmm7VZjJc5tC60pkOVUPzLwkKl1vCiYP+2b1cG8N9q1O3P0JmNM68u8vsgefPbxRUCSGxSXD+g==}
@@ -1595,6 +1680,17 @@ packages:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
     dev: true
 
+  /react-cookie@6.1.1(react@18.2.0):
+    resolution: {integrity: sha512-fuFRpf8LH6SfmVMowDUIRywJF5jAUDUWrm0EI5VdXfTl5bPcJ7B0zWbuYpT0Tvikx7Gs18MlvAT+P+744dUz2g==}
+    peerDependencies:
+      react: '>= 16.3.0'
+    dependencies:
+      '@types/hoist-non-react-statics': 3.3.2
+      hoist-non-react-statics: 3.3.2
+      react: 18.2.0
+      universal-cookie: 6.1.1
+    dev: false
+
   /react-dom@18.2.0(react@18.2.0):
     resolution: {integrity: sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==}
     peerDependencies:
@@ -1603,6 +1699,42 @@ packages:
       loose-envify: 1.4.0
       react: 18.2.0
       scheduler: 0.23.0
+    dev: false
+
+  /react-hook-form@7.47.0(react@18.2.0):
+    resolution: {integrity: sha512-F/TroLjTICipmHeFlMrLtNLceO2xr1jU3CyiNla5zdwsGUGu2UOxxR4UyJgLlhMwLW/Wzp4cpJ7CPfgJIeKdSg==}
+    engines: {node: '>=12.22.0'}
+    peerDependencies:
+      react: ^16.8.0 || ^17 || ^18
+    dependencies:
+      react: 18.2.0
+    dev: false
+
+  /react-is@16.13.1:
+    resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
+    dev: false
+
+  /react-router-dom@6.16.0(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-aTfBLv3mk/gaKLxgRDUPbPw+s4Y/O+ma3rEN1u8EgEpLpPe6gNjIsWt9rxushMHHMb7mSwxRGdGlGdvmFsyPIg==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      react: '>=16.8'
+      react-dom: '>=16.8'
+    dependencies:
+      '@remix-run/router': 1.9.0
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      react-router: 6.16.0(react@18.2.0)
+    dev: false
+
+  /react-router@6.16.0(react@18.2.0):
+    resolution: {integrity: sha512-VT4Mmc4jj5YyjpOi5jOf0I+TYzGpvzERy4ckNSvSh2RArv8LLoCxlsZ2D+tc7zgjxcY34oTz2hZaeX5RVprKqA==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      react: '>=16.8'
+    dependencies:
+      '@remix-run/router': 1.9.0
+      react: 18.2.0
     dev: false
 
   /react@18.2.0:
@@ -1794,6 +1926,13 @@ packages:
     resolution: {integrity: sha512-mI4WrpHsbCIcwT9cF4FZvr80QUeKvsUsUvKDoR+X/7XHQH98xYD8YHZg7ANtz2GtZt/CBq2QJ0thkGJMHfqc1w==}
     engines: {node: '>=14.17'}
     hasBin: true
+
+  /universal-cookie@6.1.1:
+    resolution: {integrity: sha512-33S9x3CpdUnnjwTNs2Fgc41WGve2tdLtvaK2kPSbZRc5pGpz2vQFbRWMxlATsxNNe/Cy8SzmnmbuBM85jpZPtA==}
+    dependencies:
+      '@types/cookie': 0.5.2
+      cookie: 0.5.0
+    dev: false
 
   /uri-js@4.4.1:
     resolution: {integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==}
