@@ -8,7 +8,7 @@ const AuthCallbackPage = () => {
   const { setAccessToken } = useAuthContext();
 
   useEffect(() => {
-    const accessToken = searchParams.get("token");
+    const accessToken = searchParams.get("accessToken");
     if (accessToken === null) {
       // TODO: Better error handling
       console.log("No token found in URL");

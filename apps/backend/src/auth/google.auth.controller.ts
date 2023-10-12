@@ -5,6 +5,7 @@ import { jwt } from "../plugins";
 import { UnauthorizedError } from "../errors";
 import { OAuthRequestError } from "@lucia-auth/oauth";
 import { randomUUID as uuidv4 } from "crypto";
+import { getSuccessCallbackUrl } from "./util";
 
 const schemaDetail = {
   tags: ["Auth"],
@@ -42,6 +43,10 @@ export default new Elysia({ prefix: "/google" })
       cookie: { googleAuthState },
       jwt,
     }) => {
+      // TODO: Instead of throwing an error here,
+      // we should redirect the user to an error callback on the frontend.
+      // This could be customizable with a param to `/authorize`
+      // and fall back to the current behavior if not provided.
       if (!googleAuthState) {
         throw new UnauthorizedError(`Missing cookie 'googleAuthState'`);
       }
@@ -73,10 +78,10 @@ export default new Elysia({ prefix: "/google" })
           id: user.userId,
           sub: user.username,
         });
-        set.redirect = `http://localhost:3000/auth/callback?token=${accessToken}`;
+        set.redirect = getSuccessCallbackUrl(accessToken);
       } catch (e) {
         if (e instanceof OAuthRequestError) {
-          throw new UnauthorizedError(e.message);
+          throw new UnauthorizedError("Authentication with Google failed");
         }
         throw e;
       }
@@ -96,8 +101,7 @@ export default new Elysia({ prefix: "/google" })
         ...schemaDetail,
         responses: {
           302: {
-            description:
-              "Redirect to http://localhost:3000/auth/callback?token=accessToken",
+            description: `Redirect to ${getSuccessCallbackUrl("accessToken")}`,
           },
         },
       },

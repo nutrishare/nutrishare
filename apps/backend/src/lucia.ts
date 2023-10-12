@@ -36,14 +36,14 @@ export const auth = lucia({
 export const githubAuth = github(auth, {
   clientId: appEnv.GITHUB_CLIENT_ID,
   clientSecret: appEnv.GITHUB_CLIENT_SECRET,
-  redirectUri: "http://localhost:8080/api/auth/google/callback",
+  redirectUri: appEnv.GITHUB_CALLBACK_REDIRECT_URL,
   scope: ["user:email"],
 });
 
 export const googleAuth = google(auth, {
   clientId: appEnv.GOOGLE_CLIENT_ID,
   clientSecret: appEnv.GOOGLE_CLIENT_SECRET,
-  redirectUri: "http://localhost:8080/api/auth/google/callback",
+  redirectUri: appEnv.GOOGLE_CALLBACK_REDIRECT_URL,
   scope: ["profile", "email"],
 });
 

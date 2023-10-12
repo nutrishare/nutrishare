@@ -83,10 +83,10 @@ const RegisterPage = () => {
 
       <h2>Sign in via an external service</h2>
       <div className="external-auth">
-        <a href="http://localhost:8080/api/auth/google/authorize">
+        <a href={import.meta.env.VITE_GOOGLE_AUTHORIZE_URL}>
           <button type="button">Continue with Google</button>
         </a>
-        <a href="http://localhost:8080/api/auth/github/authorize">
+        <a href={import.meta.env.VITE_GITHUB_AUTHORIZE_URL}>
           <button type="button">Continue with GitHub</button>
         </a>
       </div>

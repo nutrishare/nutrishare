@@ -5,6 +5,7 @@ import { randomUUID as uuidv4 } from "crypto";
 import cookie from "@elysiajs/cookie";
 import { UnauthorizedError } from "../errors";
 import { OAuthRequestError } from "@lucia-auth/oauth";
+import { getSuccessCallbackUrl } from "./util";
 
 const schemaDetail = {
   tags: ["Auth"],
@@ -78,12 +79,12 @@ export default new Elysia({ prefix: "/github" })
           id: user.userId,
           sub: user.username,
         });
-        // TODO: Frontend address should be configurable via a query param to `/authorize`
-        set.redirect = `http://localhost:3000/auth/callback?token=${accessToken}`;
+        set.redirect = getSuccessCallbackUrl(accessToken);
       } catch (e) {
         if (e instanceof OAuthRequestError) {
-          throw new UnauthorizedError("Invalid GitHub authorization code");
+          throw new UnauthorizedError("Authentication with GitHub failed");
         }
+        throw e;
       }
     },
     {
@@ -98,8 +99,7 @@ export default new Elysia({ prefix: "/github" })
         ...schemaDetail,
         responses: {
           302: {
-            description:
-              "Redirect to http://localhost:3000/auth/callback?token=accessToken",
+            description: `Redirect to ${getSuccessCallbackUrl("accessToken")}`,
           },
         },
       },
