@@ -1,14 +1,13 @@
-import { Type, Static } from "@sinclair/typebox";
+import { Type, Static, TSchema } from "@sinclair/typebox";
 import { Value } from "@sinclair/typebox/value";
 
-const SpaceSeparatedArray = Type.Transform(Type.String())
-  .Decode((value) => value.split(" "))
-  .Encode((value) => value.join(" "));
+const SpaceSeparatedArray = (defaultValue: string) =>
+  Type.Transform(Type.String({ default: defaultValue }))
+    .Decode((value) => value.split(" "))
+    .Encode((value) => value.join(" "));
 
-const Env = Type.Object({
+const RequiredEnv = Type.Object({
   JWT_SECRET: Type.String(),
-  NODE_ENV: Type.Optional(Type.Union([Type.Literal("PRODUCTION")])),
-  CORS_ALLOWED_ORIGINS: Type.Optional(SpaceSeparatedArray),
   FRONTEND_AUTH_SUCCESS_CALLBACK_URL: Type.String(),
   GITHUB_CLIENT_ID: Type.String(),
   GITHUB_CLIENT_SECRET: Type.String(),
@@ -18,15 +17,37 @@ const Env = Type.Object({
   GOOGLE_CALLBACK_REDIRECT_URL: Type.String(),
 });
 
-type Env = Static<typeof Env>;
+const OptionalEnv = Type.Object({
+  NODE_ENV: Type.Union(
+    [Type.Literal("PRODUCTION"), Type.Literal("DEVELOPMENT")],
+    { default: "PRODUCTION" },
+  ),
+  CORS_ALLOWED_ORIGINS: SpaceSeparatedArray("*"),
+});
 
-const envErrors = [...Value.Errors(Env, Bun.env)];
+const Env = Type.Composite([RequiredEnv, OptionalEnv]);
 
-for (const envError of envErrors) {
-  console.error(
-    `${envError.message} ${envError.path} but got ${envError.value}`,
-  );
+const check = <T extends TSchema>(
+  schema: T,
+  value: unknown,
+): value is Static<T> => {
+  if (Value.Check(schema, value)) {
+    return true;
+  }
+  for (const error of Value.Errors(schema, value)) {
+    console.error(`${error.message} ${error.path} but got ${error.value}`);
+  }
+  return false;
+};
+
+if (!check(RequiredEnv, Bun.env)) {
   throw new Error("Invalid env, check above errors!");
 }
 
-export default Bun.env as Env;
+const converted = Value.Cast(Env, Bun.env);
+
+if (!check(Env, converted)) {
+  throw new Error("Invalid env, check above errors!");
+}
+
+export default Value.Decode(Env, converted);

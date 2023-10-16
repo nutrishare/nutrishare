@@ -13,8 +13,10 @@ type UserAttributes = {
   email: string;
 };
 
+const env = appEnv.NODE_ENV === "DEVELOPMENT" ? "DEV" : "PROD";
+
 export const auth = lucia({
-  env: "DEV", // TODO: Allow "PROD"
+  env,
   middleware: elysia(),
   adapter: prismaAdapter(prisma, {
     user: "user",
