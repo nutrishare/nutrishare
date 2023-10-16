@@ -6,10 +6,8 @@ const SpaceSeparatedArray = (defaultValue: string) =>
     .Decode((value) => value.split(" "))
     .Encode((value) => value.join(" "));
 
-const Env = Type.Object({
+const RequiredEnv = Type.Object({
   JWT_SECRET: Type.String(),
-  NODE_ENV: Type.Optional(Type.Union([Type.Literal("PRODUCTION")])),
-  CORS_ALLOWED_ORIGINS: Type.Optional(SpaceSeparatedArray("*")),
   FRONTEND_AUTH_SUCCESS_CALLBACK_URL: Type.String(),
   GITHUB_CLIENT_ID: Type.String(),
   GITHUB_CLIENT_SECRET: Type.String(),
@@ -19,9 +17,15 @@ const Env = Type.Object({
   GOOGLE_CALLBACK_REDIRECT_URL: Type.String(),
 });
 
-const RequiredEnv = Type.Object({
-  JWT_SECRET: Type.String(),
+const OptionalEnv = Type.Object({
+  NODE_ENV: Type.Union(
+    [Type.Literal("PRODUCTION"), Type.Literal("DEVELOPMENT")],
+    { default: "PRODUCTION" },
+  ),
+  CORS_ALLOWED_ORIGINS: SpaceSeparatedArray("*"),
 });
+
+const Env = Type.Composite([RequiredEnv, OptionalEnv]);
 
 const check = <T extends TSchema>(
   schema: T,
@@ -46,4 +50,4 @@ if (!check(Env, converted)) {
   throw new Error("Invalid env, check above errors!");
 }
 
-export default converted;
+export default Value.Decode(Env, converted);
