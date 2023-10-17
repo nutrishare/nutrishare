@@ -1,26 +1,18 @@
 import Elysia, { t } from "elysia";
 import { googleAuth } from "../lucia";
 import cookie from "@elysiajs/cookie";
-import { jwt } from "../plugins";
-import { UnauthorizedError } from "../errors";
-import { OAuthRequestError } from "@lucia-auth/oauth";
-import { randomUUID as uuidv4 } from "crypto";
 import { getSuccessCallbackUrl } from "./util";
-
-const schemaDetail = {
-  tags: ["Auth"],
-};
+import authService from "./auth.service";
+import { schemaDetail } from "./auth.model";
 
 export default new Elysia({ prefix: "/google" })
   .use(cookie())
-  .use(jwt)
-  .error({
-    UnauthorizedError,
-  })
+  .use(authService)
   .get(
     "/authorize",
     async ({ set, setCookie }) => {
       const [authUrl, authState] = await googleAuth.getAuthorizationUrl();
+      // FIXME: Set secure=true when we have HTTPS (maybe with env=PRODUCTION set?)
       setCookie("googleAuthState", authState, { maxAge: 60 });
       set.redirect = authUrl.toString();
     },
@@ -41,50 +33,16 @@ export default new Elysia({ prefix: "/google" })
       set,
       query: { code, state },
       cookie: { googleAuthState },
-      jwt,
+      authService,
     }) => {
       // TODO: Instead of throwing an error here,
       // we should redirect the user to an error callback on the frontend.
       // This could be customizable with a param to `/authorize`
       // and fall back to the current behavior if not provided.
-      if (!googleAuthState) {
-        throw new UnauthorizedError(`Missing cookie 'googleAuthState'`);
-      }
-      if (googleAuthState.toString() !== state) {
-        throw new UnauthorizedError(
-          "The 'state' query param doesn't match the 'googleAuthState' cookie",
-        );
-      }
-
-      try {
-        const { getExistingUser, googleUser, createUser } =
-          await googleAuth.validateCallback(code);
-
-        const getUser = async () => {
-          const existingUser = await getExistingUser();
-          if (existingUser) return existingUser;
-
-          return createUser({
-            userId: uuidv4(),
-            attributes: {
-              username: googleUser.name,
-              email: googleUser.email,
-            },
-          });
-        };
-
-        const user = await getUser();
-        const accessToken = await jwt.sign({
-          id: user.userId,
-          sub: user.username,
-        });
-        set.redirect = getSuccessCallbackUrl(accessToken);
-      } catch (e) {
-        if (e instanceof OAuthRequestError) {
-          throw new UnauthorizedError("Authentication with Google failed");
-        }
-        throw e;
-      }
+      authService.validateOauthState(state, googleAuthState?.toString());
+      const user = await authService.authenticateGoogleUser(code);
+      const accessToken = await authService.signToken(user);
+      set.redirect = getSuccessCallbackUrl(accessToken);
     },
     {
       query: t.Object({

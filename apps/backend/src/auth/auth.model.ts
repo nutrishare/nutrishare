@@ -1,5 +1,9 @@
 import { Elysia, t } from "elysia";
 
+export const schemaDetail = {
+  tags: ["Auth"],
+};
+
 const Register = t.Object({
   username: t.String(),
   email: t.String(),

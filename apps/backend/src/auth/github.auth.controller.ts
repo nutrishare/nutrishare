@@ -1,22 +1,13 @@
 import { Elysia, t } from "elysia";
-import { jwt } from "../plugins";
 import { githubAuth } from "../lucia";
-import { randomUUID as uuidv4 } from "crypto";
 import cookie from "@elysiajs/cookie";
-import { UnauthorizedError } from "../errors";
-import { OAuthRequestError } from "@lucia-auth/oauth";
 import { getSuccessCallbackUrl } from "./util";
-
-const schemaDetail = {
-  tags: ["Auth"],
-};
+import authService from "./auth.service";
+import { schemaDetail } from "./auth.model";
 
 export default new Elysia({ prefix: "/github" })
   .use(cookie())
-  .use(jwt)
-  .error({
-    UnauthorizedError,
-  })
+  .use(authService)
   .get(
     "/authorize",
     async ({ set, setCookie }) => {
@@ -42,50 +33,16 @@ export default new Elysia({ prefix: "/github" })
       set,
       query: { code, state },
       cookie: { githubAuthState },
-      jwt,
+      authService,
     }) => {
       // TODO: Instead of throwing an error here,
       // we should redirect the user to an error callback on the frontend.
       // This could be customizable with a param to `/authorize`
       // and fall back to the current behavior if not provided.
-      if (!githubAuthState) {
-        throw new UnauthorizedError(`Missing cookie 'githubAuthState'`);
-      }
-      if (githubAuthState.toString() !== state) {
-        throw new UnauthorizedError(
-          "The 'state' query param doesn't match the 'githubAuthState' cookie",
-        );
-      }
-
-      try {
-        const { getExistingUser, githubUser, createUser } =
-          await githubAuth.validateCallback(code);
-
-        const getUser = async () => {
-          const existingUser = await getExistingUser();
-          if (existingUser) return existingUser;
-
-          return createUser({
-            userId: uuidv4(),
-            attributes: {
-              username: githubUser.login,
-              email: githubUser.email,
-            },
-          });
-        };
-
-        const user = await getUser();
-        const accessToken = await jwt.sign({
-          id: user.userId,
-          sub: user.username,
-        });
-        set.redirect = getSuccessCallbackUrl(accessToken);
-      } catch (e) {
-        if (e instanceof OAuthRequestError) {
-          throw new UnauthorizedError("Authentication with GitHub failed");
-        }
-        throw e;
-      }
+      authService.validateOauthState(state, githubAuthState?.toString());
+      const user = await authService.authenticateGithubUser(code);
+      const accessToken = await authService.signToken(user);
+      set.redirect = getSuccessCallbackUrl(accessToken);
     },
     {
       query: t.Object({
