@@ -1,15 +1,12 @@
-# Elysia with Bun runtime
+# NutriShare
 
-## Getting Started
-To get started with this template, simply paste this command into your terminal:
-```bash
-bun create elysia ./elysia-example
-```
+## Running
 
-## Development
-To start the development server run:
-```bash
-bun run dev
-```
+We use pnpm for package management and bun as the runtime.
 
-Open http://localhost:3000/ with your browser to see the result.
+1. Install project dependencies: `pnpm i`
+2. Set up the `.env` file with database credentials and OAuth2 provider secrets
+3. Start the database: `docker compose up -d`
+4. Migrate the database: `bunx prisma migrate deploy --schema packages/db/prisma/schema.prisma`
+5. Run the project: `bun dev`
+6. Open http://localhost:3000/ in your browser
