@@ -3,9 +3,8 @@
   "private": true,
   "module": "index.ts",
   "scripts": {
-    "dev": "turbo run dev --parallel",
-    "turbo": "turbo",
-    "db:generate": "turbo db:generate"
+    "turbo": "dotenv -- turbo",
+    "dev": "dotenv -- turbo run dev --parallel"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.2.2",
@@ -15,6 +14,12 @@
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
-  "workspaces": ["apps/*", "packages/*"],
-  "packageManager": "pnpm@8.7.6"
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "packageManager": "pnpm@8.7.6",
+  "dependencies": {
+    "dotenv-cli": "^7.3.0"
+  }
 }
