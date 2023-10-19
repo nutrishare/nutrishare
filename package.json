@@ -4,7 +4,9 @@
   "module": "index.ts",
   "scripts": {
     "turbo": "dotenv -- turbo",
-    "dev": "dotenv -- turbo run dev --parallel"
+    "dev": "dotenv -- turbo run dev --parallel",
+    "db:migrate": "bunx prisma migrate deploy --schema packages/db/prisma/schema.prisma",
+    "db:makemigration": "bunx prisma migrate dev --schema packages/db/prisma/schema.prisma"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.2.2",
