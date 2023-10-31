@@ -39,7 +39,7 @@ const RegisterPage = () => {
     }
 
     setAccessToken(res.data.accessToken);
-    navigate("/auth/success");
+    navigate("/");
   };
 
   return (
