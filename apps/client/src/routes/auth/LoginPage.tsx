@@ -26,7 +26,7 @@ const LoginPage = () => {
     }
 
     setAccessToken(res.data.accessToken);
-    navigate("/auth/success");
+    navigate("/");
   };
 
   return (

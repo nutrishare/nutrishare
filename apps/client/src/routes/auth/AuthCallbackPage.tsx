@@ -16,7 +16,7 @@ const AuthCallbackPage = () => {
     }
 
     setAccessToken(accessToken);
-    navigate("/auth/success");
+    navigate("/");
   }, [searchParams, setAccessToken, navigate]);
 
   return (
