@@ -17,6 +17,7 @@ const Login = t.Object({
 
 const Token = t.Object({
   accessToken: t.String(),
+  refreshToken: t.String(),
 });
 
 export const authModel = new Elysia().model({

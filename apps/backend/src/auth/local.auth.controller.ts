@@ -34,9 +34,8 @@ export default new Elysia({ prefix: "/local" })
     "/login",
     async ({ set, body: { login, password }, authService }) => {
       const user = await authService.authenticateLocalUser(login, password);
-      const accessToken = await authService.signToken(user);
       set.status = "Created";
-      return { accessToken };
+      return await authService.signTokenPair(user);
     },
     {
       body: "auth.login",

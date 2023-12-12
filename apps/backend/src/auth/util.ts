@@ -13,5 +13,8 @@ export const verifyPassword = async (
 
 // TODO: Frontend address should be configurable
 // via a query param to the initial authorization request
-export const getSuccessCallbackUrl = (accessToken: string): string =>
-  `${appEnv.FRONTEND_AUTH_SUCCESS_CALLBACK_URL}?accessToken=${accessToken}`;
+export const getSuccessCallbackUrl = (
+  accessToken: string,
+  refreshToken: string,
+): string =>
+  `${appEnv.FRONTEND_AUTH_SUCCESS_CALLBACK_URL}?accessToken=${accessToken}&refreshToken=${refreshToken}`;

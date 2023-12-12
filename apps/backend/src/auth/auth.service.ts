@@ -1,11 +1,12 @@
 import Elysia from "elysia";
 import { randomUUID as uuidv4 } from "crypto";
 import { LuciaError } from "lucia";
-import { PrismaClientError } from "@nutrishare/db";
+import { PrismaClientError, prisma } from "@nutrishare/db";
 import { jwt } from "../plugins";
 import { BadRequestError, ConflictError, UnauthorizedError } from "../errors";
 import { auth as localAuth, githubAuth, googleAuth } from "../lucia";
 import { OAuthRequestError } from "@lucia-auth/oauth";
+import { TokenType } from "../plugins/jwt.plugin";
 
 export default new Elysia()
   .use(jwt)
@@ -16,8 +17,48 @@ export default new Elysia()
   })
   .derive(async ({ jwt }) => ({
     authService: {
-      signToken: async (user: { userId: string; username: string }) => {
-        return jwt.sign({ id: user.userId, sub: user.username });
+      signToken: async (
+        user: { userId: string; username: string },
+        tokenType: TokenType,
+      ) => {
+        return jwt.sign({
+          id: user.userId,
+          sub: user.username,
+          typ: tokenType,
+        });
+      },
+      signTokenPair: async (user: { userId: string; username: string }) => {
+        // TODO: Access token should live much shorter than refresh token
+        const accessToken = await jwt.sign({
+          id: user.userId,
+          sub: user.username,
+          typ: TokenType.Access,
+        });
+        const refreshToken = await jwt.sign({
+          id: user.userId,
+          sub: user.username,
+          typ: TokenType.Refresh,
+        });
+        // Invalidate all valid refresh tokens for this user
+        await prisma.refreshToken.updateMany({
+          where: { userId: user.userId, expired: false },
+          data: { expired: true },
+        });
+        await prisma.refreshToken.create({
+          data: {
+            userId: user.userId,
+            refreshToken: refreshToken,
+            expired: false,
+          },
+        });
+        return { accessToken, refreshToken };
+      },
+      verifyToken: async (token: string, tokenType: TokenType) => {
+        const jwtPayload = await jwt.verify(token);
+        if (!jwtPayload || jwtPayload.typ !== tokenType) {
+          throw new UnauthorizedError();
+        }
+        return jwtPayload;
       },
       validateUsername: (username: string) => {
         if (username.length < 3 || username.length > 20) {

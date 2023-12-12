@@ -41,8 +41,10 @@ export default new Elysia({ prefix: "/google" })
       // and fall back to the current behavior if not provided.
       authService.validateOauthState(state, googleAuthState?.toString());
       const user = await authService.authenticateGoogleUser(code);
-      const accessToken = await authService.signToken(user);
-      set.redirect = getSuccessCallbackUrl(accessToken);
+      const { accessToken, refreshToken } = await authService.signTokenPair(
+        user,
+      );
+      set.redirect = getSuccessCallbackUrl(accessToken, refreshToken);
     },
     {
       query: t.Object({
@@ -59,7 +61,10 @@ export default new Elysia({ prefix: "/google" })
         ...schemaDetail,
         responses: {
           302: {
-            description: `Redirect to ${getSuccessCallbackUrl("accessToken")}`,
+            description: `Redirect to ${getSuccessCallbackUrl(
+              "accessToken",
+              "refreshToken",
+            )}`,
           },
         },
       },
