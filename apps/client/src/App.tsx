@@ -13,7 +13,7 @@ type User = {
 };
 
 const App = () => {
-  const { accessToken, setAccessToken } = useAuthContext();
+  const { accessToken, setAccessToken, setRefreshToken } = useAuthContext();
   const [user, setUser] = useState<User>();
 
   useEffect(() => {
@@ -35,8 +35,9 @@ const App = () => {
 
   const onLogout = () => {
     setAccessToken(null);
+    setRefreshToken(null);
     setUser(undefined);
-  }
+  };
 
   return (
     <>
@@ -45,10 +46,11 @@ const App = () => {
       {user && (
         <div>
           <p>
-
-          Logged in as {user.username} ({user.id})
+            Logged in as {user.username} ({user.id})
           </p>
-          <button type="button" onClick={onLogout}>Logout</button>
+          <button type="button" onClick={onLogout}>
+            Logout
+          </button>
         </div>
       )}
       {user === undefined && (
