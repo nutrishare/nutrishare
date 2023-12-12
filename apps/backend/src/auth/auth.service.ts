@@ -15,26 +15,16 @@ export default new Elysia()
     ConflictError,
     UnauthorizedError,
   })
-  .derive(async ({ jwt }) => ({
+  .derive(async ({ accessJwt, refreshJwt }) => ({
     authService: {
-      signToken: async (
-        user: { userId: string; username: string },
-        tokenType: TokenType,
-      ) => {
-        return jwt.sign({
-          id: user.userId,
-          sub: user.username,
-          typ: tokenType,
-        });
-      },
       signTokenPair: async (user: { userId: string; username: string }) => {
         // TODO: Access token should live much shorter than refresh token
-        const accessToken = await jwt.sign({
+        const accessToken = await accessJwt.sign({
           id: user.userId,
           sub: user.username,
           typ: TokenType.Access,
         });
-        const refreshToken = await jwt.sign({
+        const refreshToken = await refreshJwt.sign({
           id: user.userId,
           sub: user.username,
           typ: TokenType.Refresh,
@@ -53,9 +43,16 @@ export default new Elysia()
         });
         return { accessToken, refreshToken };
       },
-      verifyToken: async (token: string, tokenType: TokenType) => {
-        const jwtPayload = await jwt.verify(token);
-        if (!jwtPayload || jwtPayload.typ !== tokenType) {
+      verifyAccessToken: async (token: string) => {
+        const jwtPayload = await accessJwt.verify(token);
+        if (!jwtPayload || jwtPayload.typ !== TokenType.Access) {
+          throw new UnauthorizedError();
+        }
+        return jwtPayload;
+      },
+      verifyRefreshToken: async (token: string) => {
+        const jwtPayload = await refreshJwt.verify(token);
+        if (!jwtPayload || jwtPayload.typ !== TokenType.Refresh) {
           throw new UnauthorizedError();
         }
         return jwtPayload;

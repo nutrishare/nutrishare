@@ -5,7 +5,6 @@ import githubAuth from "./github.auth.controller";
 import localAuth from "./local.auth.controller";
 import googleAuth from "./google.auth.controller";
 import { schemaDetail } from "./auth.model";
-import { TokenType } from "../plugins/jwt.plugin";
 import { UnauthorizedError } from "../errors";
 import { prisma } from "@nutrishare/db";
 import authService from "./auth.service";
@@ -16,24 +15,29 @@ export default new Elysia({ prefix: "/auth" })
   .use(localAuth)
   .use(githubAuth)
   .use(googleAuth)
-  .use(authMiddleware)
   .post(
     "/refresh",
-    async ({ body: { refreshToken }, user, authService }) => {
-      await authService.verifyToken(refreshToken, TokenType.Refresh);
+    async ({ body: { refreshToken: providedRefreshToken }, authService }) => {
+      const refreshToken = await authService.verifyRefreshToken(
+        providedRefreshToken,
+      );
+      const userId = refreshToken.id;
 
       const expiredToken = await prisma.refreshToken.findFirst({
-        where: { refreshToken, expired: true },
+        where: { refreshToken: providedRefreshToken, expired: true },
       });
       // If the used refresh token is expired, invalidate all valid refresh tokens for this user
       if (expiredToken) {
         await prisma.refreshToken.updateMany({
-          where: { userId: user.id, expired: false },
+          where: { userId, expired: false },
           data: { expired: true },
         });
         throw new UnauthorizedError();
       }
 
+      const user = await prisma.user.findFirstOrThrow({
+        where: { id: userId },
+      });
       return authService.signTokenPair({
         userId: user.id,
         username: user.username,
@@ -45,6 +49,7 @@ export default new Elysia({ prefix: "/auth" })
       detail: schemaDetail,
     },
   )
+  .use(authMiddleware)
   .get("/me", ({ user }) => user, {
     response: "user.user",
     detail: schemaDetail,

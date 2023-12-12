@@ -1,7 +1,6 @@
 import Elysia from "elysia";
 import { prisma } from "@nutrishare/db";
 import { UnauthorizedError } from "../errors";
-import { TokenType } from "../plugins/jwt.plugin";
 import authService from "./auth.service";
 
 export default new Elysia()
@@ -14,10 +13,7 @@ export default new Elysia()
     const accessToken = headers["authorization"]?.split(" ")[1];
     if (!accessToken) throw new UnauthorizedError();
 
-    const jwtPayload = await authService.verifyToken(
-      accessToken,
-      TokenType.Access,
-    );
+    const jwtPayload = await authService.verifyAccessToken(accessToken);
 
     const { id } = jwtPayload;
     const user = await prisma.user.findFirst({ where: { id } });
