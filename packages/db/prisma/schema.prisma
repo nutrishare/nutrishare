@@ -25,3 +25,14 @@ model AuthKey {
 
   @@index([user_id])
 }
+
+model RefreshToken {
+  id           String   @id @unique @default(uuid())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  userId       String
+  refreshToken String
+  expired      Boolean  @default(false)
+
+  @@index(userId)
+}
