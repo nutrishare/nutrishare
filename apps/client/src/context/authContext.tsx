@@ -1,5 +1,6 @@
 /// <reference lib="dom" />
 
+import { treaty } from "@nutrishare/libs";
 import {
   createContext,
   useCallback,
@@ -13,6 +14,7 @@ type AuthContextType = {
   setAccessToken: (token: string | null) => void;
   refreshToken: string | null;
   setRefreshToken: (token: string | null) => void;
+  refreshTokenPair: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -49,13 +51,30 @@ export const AuthContextProvider = ({
     localStorage.setItem("refreshToken", refreshToken);
   }, [refreshToken]);
 
-    localStorage.setItem("refreshToken", token);
-    _setRefreshToken(token);
-  }, []);
+  const refreshTokenPair = useCallback(async () => {
+    if (!refreshToken) return;
+
+    const res = await treaty.api.auth.refresh.post({ refreshToken });
+    if (res.status !== 200 || res.data === null) {
+      console.error("refreshTokenPair", res.error);
+      setAccessToken(null);
+      setRefreshToken(null);
+      return;
+    }
+
+    setAccessToken(res.data.accessToken);
+    setRefreshToken(res.data.refreshToken);
+  }, [refreshToken, setAccessToken, setRefreshToken]);
 
   return (
     <AuthContext.Provider
-      value={{ accessToken, setAccessToken, refreshToken, setRefreshToken }}
+      value={{
+        accessToken,
+        setAccessToken,
+        refreshToken,
+        setRefreshToken,
+        refreshTokenPair,
+      }}
     >
       {children}
     </AuthContext.Provider>

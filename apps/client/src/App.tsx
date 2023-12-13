@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import "./App.css";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useAuthContext } from "./context/authContext";
 import { treaty } from "@nutrishare/libs";
 
@@ -13,31 +13,36 @@ type User = {
 };
 
 const App = () => {
-  const { accessToken, setAccessToken, setRefreshToken } = useAuthContext();
+  const { accessToken, setAccessToken, setRefreshToken, refreshTokenPair } =
+    useAuthContext();
   const [user, setUser] = useState<User>();
 
   useEffect(() => {
+    if (!accessToken) return;
+    if (user) return;
+
     const getUser = async () => {
       const res = await treaty.api.auth.me.get({
         $headers: { Authorization: `Bearer ${accessToken}` },
       });
+      if (res.status === 401) return await refreshTokenPair();
       if (res.status !== 200 || res.data === null) {
         // TODO: Better error handling
-        console.log("Error getting user");
+        console.error("getUser", res.error);
         return;
       }
 
       setUser(res.data);
     };
 
-    if (accessToken) getUser();
-  }, [accessToken]);
+    getUser();
+  }, [user, accessToken, refreshTokenPair]);
 
-  const onLogout = () => {
+  const onLogout = useCallback(() => {
     setAccessToken(null);
     setRefreshToken(null);
     setUser(undefined);
-  };
+  }, [setAccessToken, setRefreshToken]);
 
   return (
     <>
