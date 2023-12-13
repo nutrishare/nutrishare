@@ -20,34 +20,34 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export const AuthContextProvider = ({
   children,
 }: { children: React.ReactNode }) => {
-  const [accessToken, _setAccessToken] = useState<string | null>(null);
-  const [refreshToken, _setRefreshToken] = useState<string | null>(null);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [refreshToken, setRefreshToken] = useState<string | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
-    _setAccessToken(token);
-  }, [_setAccessToken]);
+    if (token) setAccessToken(token);
+  }, [setAccessToken]);
 
   useEffect(() => {
     const token = localStorage.getItem("refreshToken");
-    _setRefreshToken(token);
-  }, [_setRefreshToken]);
+    if (token) setRefreshToken(token);
+  }, [setRefreshToken]);
 
-  const setAccessToken = useCallback((token: string | null) => {
-    if (token === null) {
+  useEffect(() => {
+    if (accessToken === null) {
       localStorage.removeItem("accessToken");
       return;
     }
+    localStorage.setItem("accessToken", accessToken);
+  }, [accessToken]);
 
-    localStorage.setItem("accessToken", token);
-    _setAccessToken(token);
-  }, []);
-
-  const setRefreshToken = useCallback((token: string | null) => {
-    if (token === null) {
+  useEffect(() => {
+    if (refreshToken === null) {
       localStorage.removeItem("refreshToken");
       return;
     }
+    localStorage.setItem("refreshToken", refreshToken);
+  }, [refreshToken]);
 
     localStorage.setItem("refreshToken", token);
     _setRefreshToken(token);
