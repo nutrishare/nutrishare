@@ -9,7 +9,7 @@ type LoginForm = {
 };
 
 const LoginPage = () => {
-  const { setAccessToken } = useAuthContext();
+  const { setAccessToken, setRefreshToken } = useAuthContext();
   const navigate = useNavigate();
 
   const {
@@ -26,6 +26,7 @@ const LoginPage = () => {
     }
 
     setAccessToken(res.data.accessToken);
+    setRefreshToken(res.data.refreshToken);
     navigate("/");
   };
 

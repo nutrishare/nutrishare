@@ -5,19 +5,21 @@ import { useAuthContext } from "../../context/authContext";
 const AuthCallbackPage = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { setAccessToken } = useAuthContext();
+  const { setAccessToken, setRefreshToken } = useAuthContext();
 
   useEffect(() => {
     const accessToken = searchParams.get("accessToken");
-    if (accessToken === null) {
+    const refreshToken = searchParams.get("refreshToken");
+    if (accessToken === null || refreshToken === null) {
       // TODO: Better error handling
       console.log("No token found in URL");
       return;
     }
 
     setAccessToken(accessToken);
+    setRefreshToken(refreshToken);
     navigate("/");
-  }, [searchParams, setAccessToken, navigate]);
+  }, [searchParams, setAccessToken, setRefreshToken, navigate]);
 
   return (
     <>

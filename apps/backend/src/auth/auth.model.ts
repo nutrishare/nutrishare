@@ -15,12 +15,18 @@ const Login = t.Object({
   password: t.String(),
 });
 
+const Refresh = t.Object({
+  refreshToken: t.String(),
+});
+
 const Token = t.Object({
   accessToken: t.String(),
+  refreshToken: t.String(),
 });
 
 export const authModel = new Elysia().model({
   "auth.register": Register,
   "auth.login": Login,
+  "auth.refresh": Refresh,
   "auth.token": Token,
 });

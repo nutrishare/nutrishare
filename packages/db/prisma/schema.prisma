@@ -15,6 +15,7 @@ model User {
   email     String?  @unique
 
   authKey AuthKey[]
+  refreshToken RefreshToken[]
 }
 
 model AuthKey {
@@ -24,4 +25,16 @@ model AuthKey {
   hashed_password String?
 
   @@index([user_id])
+}
+
+model RefreshToken {
+  id           String   @id @unique @default(uuid())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  userId       String
+  user         User     @relation(fields: [userId], references: [id])
+  refreshToken String
+  expired      Boolean  @default(false)
+
+  @@index(userId)
 }
