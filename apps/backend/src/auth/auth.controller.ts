@@ -29,7 +29,7 @@ export default new Elysia({ prefix: "/auth" })
       // If the used refresh token is expired, invalidate all valid refresh tokens for this user
       if (expiredToken) {
         await prisma.refreshToken.updateMany({
-          where: { userId, expired: false },
+          where: { user: { id: userId }, expired: false },
           data: { expired: true },
         });
         throw new UnauthorizedError();

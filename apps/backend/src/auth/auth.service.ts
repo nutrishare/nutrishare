@@ -31,12 +31,12 @@ export default new Elysia()
         });
         // Invalidate all valid refresh tokens for this user
         await prisma.refreshToken.updateMany({
-          where: { userId: user.userId, expired: false },
+          where: { user: { id: user.userId }, expired: false },
           data: { expired: true },
         });
         await prisma.refreshToken.create({
           data: {
-            userId: user.userId,
+            user: { connect: { id: user.userId } },
             refreshToken: refreshToken,
             expired: false,
           },
