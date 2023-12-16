@@ -8,6 +8,7 @@ import { schemaDetail } from "./auth.model";
 import { UnauthorizedError } from "../errors";
 import { prisma } from "@nutrishare/db";
 import authService from "./auth.service";
+import { invalidateTokenFamily } from "./util";
 
 export default new Elysia({ prefix: "/auth" })
   .use(userModel)
@@ -28,10 +29,7 @@ export default new Elysia({ prefix: "/auth" })
       });
       // If the used refresh token is expired, invalidate all valid refresh tokens for this user
       if (expiredToken) {
-        await prisma.refreshToken.updateMany({
-          where: { user: { id: userId }, expired: false },
-          data: { expired: true },
-        });
+        await invalidateTokenFamily(userId);
         throw new UnauthorizedError();
       }
 

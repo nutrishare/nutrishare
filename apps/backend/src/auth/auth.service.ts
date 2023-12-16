@@ -7,6 +7,7 @@ import { BadRequestError, ConflictError, UnauthorizedError } from "../errors";
 import { auth as localAuth, githubAuth, googleAuth } from "../lucia";
 import { OAuthRequestError } from "@lucia-auth/oauth";
 import { TokenType } from "../plugins/jwt.plugin";
+import { invalidateTokenFamily } from "./util";
 
 export default new Elysia()
   .use(jwt)
@@ -18,7 +19,6 @@ export default new Elysia()
   .derive(async ({ accessJwt, refreshJwt }) => ({
     authService: {
       signTokenPair: async (user: { userId: string; username: string }) => {
-        // TODO: Access token should live much shorter than refresh token
         const accessToken = await accessJwt.sign({
           id: user.userId,
           sub: user.username,
@@ -29,11 +29,7 @@ export default new Elysia()
           sub: user.username,
           typ: TokenType.Refresh,
         });
-        // Invalidate all valid refresh tokens for this user
-        await prisma.refreshToken.updateMany({
-          where: { user: { id: user.userId }, expired: false },
-          data: { expired: true },
-        });
+        await invalidateTokenFamily(user.userId);
         await prisma.refreshToken.create({
           data: {
             user: { connect: { id: user.userId } },

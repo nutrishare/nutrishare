@@ -1,3 +1,4 @@
+import { prisma } from "@nutrishare/db";
 import appEnv from ".././env";
 
 export const hashPassword = async (password: string): Promise<string> => {
@@ -9,6 +10,13 @@ export const verifyPassword = async (
   hash: string,
 ): Promise<boolean> => {
   return Bun.password.verify(password, hash);
+};
+
+export const invalidateTokenFamily = async (userId: string) => {
+  return prisma.refreshToken.updateMany({
+    where: { user: { id: userId }, expired: false },
+    data: { expired: true },
+  });
 };
 
 // TODO: Frontend address should be configurable
