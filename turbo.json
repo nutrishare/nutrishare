@@ -3,7 +3,7 @@
   "globalDependencies": ["**/.env"],
   "pipeline": {
     "build": {
-      "outputs": ["dist/**"]
+      "outputs": ["dist/**", ".expo/**"]
     },
     "dev": {
       "dependsOn": ["^db:generate"],
