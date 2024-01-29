@@ -23,6 +23,8 @@ const OptionalEnv = Type.Object({
     { default: "PRODUCTION" },
   ),
   CORS_ALLOWED_ORIGINS: SpaceSeparatedArray("*"),
+  JWT_ACCESS_EXPIRATION: Type.String({ default: "1d" }),
+  JWT_REFRESH_EXPIRATION: Type.String({ default: "7d" }),
 });
 
 const Env = Type.Composite([RequiredEnv, OptionalEnv]);

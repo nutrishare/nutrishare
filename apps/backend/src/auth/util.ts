@@ -1,3 +1,4 @@
+import { prisma } from "@nutrishare/db";
 import appEnv from ".././env";
 
 export const hashPassword = async (password: string): Promise<string> => {
@@ -11,7 +12,17 @@ export const verifyPassword = async (
   return Bun.password.verify(password, hash);
 };
 
+export const invalidateTokenFamily = async (userId: string) => {
+  return prisma.refreshToken.updateMany({
+    where: { user: { id: userId }, expired: false },
+    data: { expired: true },
+  });
+};
+
 // TODO: Frontend address should be configurable
 // via a query param to the initial authorization request
-export const getSuccessCallbackUrl = (accessToken: string): string =>
-  `${appEnv.FRONTEND_AUTH_SUCCESS_CALLBACK_URL}?accessToken=${accessToken}`;
+export const getSuccessCallbackUrl = (
+  accessToken: string,
+  refreshToken: string,
+): string =>
+  `${appEnv.FRONTEND_AUTH_SUCCESS_CALLBACK_URL}?accessToken=${accessToken}&refreshToken=${refreshToken}`;
