@@ -1,12 +1,14 @@
 {
   "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": ["**/.env"],
   "pipeline": {
     "build": {
       "outputs": ["dist/**"]
     },
     "dev": {
       "dependsOn": ["^db:generate"],
-      "cache": false
+      "cache": false,
+      "persistent": true
     },
     "db:generate": {
       "cache": false

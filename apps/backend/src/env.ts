@@ -19,8 +19,8 @@ const RequiredEnv = Type.Object({
 
 const OptionalEnv = Type.Object({
   NODE_ENV: Type.Union(
-    [Type.Literal("PRODUCTION"), Type.Literal("DEVELOPMENT")],
-    { default: "PRODUCTION" },
+    [Type.Literal("production"), Type.Literal("development")],
+    { default: "production" },
   ),
   CORS_ALLOWED_ORIGINS: SpaceSeparatedArray("*"),
   JWT_ACCESS_EXPIRATION: Type.String({ default: "1d" }),

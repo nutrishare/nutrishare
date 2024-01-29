@@ -13,7 +13,7 @@ type UserAttributes = {
   email: string;
 };
 
-const env = appEnv.NODE_ENV === "DEVELOPMENT" ? "DEV" : "PROD";
+const env = appEnv.NODE_ENV === "development" ? "DEV" : "PROD";
 
 export const auth = lucia({
   env,
