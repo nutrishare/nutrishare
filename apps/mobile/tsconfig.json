@@ -1,0 +1,13 @@
+{
+  "extends": ["@nutrishare/tsconfig/base.json"],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["./src/*"]
+    },
+    "jsx": "react-native",
+    "strict": true
+  },
+  "include": ["src", "*.ts", "*.js", ".expo/types/**/*.ts", "expo-env.d.ts"],
+  "exclude": ["node_modules"]
+}

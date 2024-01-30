@@ -159,9 +159,21 @@ importers:
       '@babel/core':
         specifier: ^7.20.0
         version: 7.23.9
+      '@nutrishare/tsconfig':
+        specifier: workspace:^
+        version: link:../../packages/tsconfig
+      '@types/react':
+        specifier: ^18.2.15
+        version: 18.2.22
+      '@types/react-dom':
+        specifier: ^18.2.7
+        version: 18.2.7
       babel-preset-expo:
         specifier: ^10.0.1
         version: 10.0.1(@babel/core@7.23.9)
+      typescript:
+        specifier: ^5.3.3
+        version: 5.3.3
 
   packages/db:
     dependencies:
@@ -7709,6 +7721,12 @@ packages:
     resolution: {integrity: sha512-mI4WrpHsbCIcwT9cF4FZvr80QUeKvsUsUvKDoR+X/7XHQH98xYD8YHZg7ANtz2GtZt/CBq2QJ0thkGJMHfqc1w==}
     engines: {node: '>=14.17'}
     hasBin: true
+
+  /typescript@5.3.3:
+    resolution: {integrity: sha512-pXWcraxM0uxAS+tN0AG/BF2TyqmHO014Z070UsJ+pFvYuRSq8KH8DmWpnbXe0pEPDHXZV3FcAbJkijJ5oNEnWw==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+    dev: true
 
   /ua-parser-js@1.0.37:
     resolution: {integrity: sha512-bhTyI94tZofjo+Dn8SN6Zv8nBDvyXTymAdM3LDI/0IboIUwTu1rEhW7v2TfiVsoYWgkQ4kOVqnI8APUFbIQIFQ==}

@@ -1,4 +1,9 @@
-import { CameraView, useCameraPermissions } from "expo-camera/next";
+import {
+  BarcodeScanningResult,
+  CameraView,
+  ModernBarcodeScanningResult,
+  useCameraPermissions,
+} from "expo-camera/next";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import {
@@ -15,15 +20,17 @@ export default function App() {
     return AndroidCodeScanner();
   } else if (Platform.OS === "ios") {
     return IOSCodeScanner();
+  } else {
+    return <Text>Unsupported OS</Text>;
   }
 }
 
 function AndroidCodeScanner() {
   useCameraPermissions();
-  const [barcode, setBarcode] = useState(null);
-  const [scannerActive, setScannerActive] = useState(false);
+  const [barcode, setBarcode] = useState<string | null>(null);
+  const [scannerActive, setScannerActive] = useState<boolean>(false);
 
-  const onBarcodeScanned = (result) => {
+  const onBarcodeScanned = (result: BarcodeScanningResult) => {
     setBarcode(result.data);
     setScannerActive(false);
   };
@@ -42,7 +49,7 @@ function AndroidCodeScanner() {
       >
         <CameraView
           style={{ flex: 1, width: "100%" }}
-          facing="back"
+          type="back"
           barcodeScannerSettings={{
             barCodeTypes: ["qr", "upc_a", "upc_e", "ean13", "ean8"],
           }}
@@ -67,9 +74,9 @@ function AndroidCodeScanner() {
 }
 
 function IOSCodeScanner() {
-  const [barcode, setBarcode] = useState(null);
+  const [barcode, setBarcode] = useState<string | null>(null);
 
-  const onBarcodeScanned = async (result) => {
+  const onBarcodeScanned = async (result: ModernBarcodeScanningResult) => {
     setBarcode(result.data);
     await CameraView.dismissScanner();
   };
@@ -81,6 +88,7 @@ function IOSCodeScanner() {
 
   const launchScanner = async () => {
     await CameraView.launchModernScanner({
+      // @ts-ignore: iOS expects 'upca' and 'upce' to not contain '_'
       barCodeTypes: ["upca", "upce", "ean13", "ean8", "qr"],
       isGuidanceEnabled: true,
       isHighlightingEnabled: true,
