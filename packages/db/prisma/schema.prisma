@@ -14,7 +14,7 @@ model User {
   username  String   @unique
   email     String?  @unique
 
-  authKey AuthKey[]
+  authKey      AuthKey[]
   refreshToken RefreshToken[]
 }
 
@@ -37,4 +37,29 @@ model RefreshToken {
   expired      Boolean  @default(false)
 
   @@index(userId)
+}
+
+model Product {
+  id          String       @id @unique @default(uuid())
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  name        String
+  description String?
+  barcode     String?
+  barcodeType BarcodeType?
+
+  weight   Float?
+  calories Float?
+  fat      Float?
+  protein  Float?
+  carbs    Float?
+
+  @@index(barcode)
+}
+
+enum BarcodeType {
+  EAN_8
+  EAN_13
+  UPC_A
+  UPC_E
 }
