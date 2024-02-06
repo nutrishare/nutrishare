@@ -16,6 +16,7 @@ model User {
 
   authKey      AuthKey[]
   refreshToken RefreshToken[]
+  product      Product[]
 }
 
 model AuthKey {
@@ -40,9 +41,12 @@ model RefreshToken {
 }
 
 model Product {
-  id          String       @id @unique @default(uuid())
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  id        String   @id @unique @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id])
+
   name        String
   description String?
   barcode     String?
