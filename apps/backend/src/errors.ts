@@ -7,3 +7,9 @@ export class UnauthorizedError extends Error {
     super(message ?? "Unauthorized");
   }
 }
+
+export class NotFoundError extends Error {
+  constructor(model: string, id: string) {
+    super(`${model} with id ${id} not found`);
+  }
+}
