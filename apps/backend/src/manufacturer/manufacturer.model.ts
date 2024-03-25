@@ -22,8 +22,11 @@ export const ManufacturerCreate = t.Omit(Manufacturer, [
   "authorId",
 ]);
 
+export const ManufacturerUpdate = t.Partial(ManufacturerCreate);
+
 export const manufacturerModel = new Elysia().model({
   "manufacturer.manufacturer": Manufacturer,
   "manufacturer.manufacturerList": ManufacturerList,
   "manufacturer.manufacturerCreate": ManufacturerCreate,
+  "manufacturer.manufacturerUpdate": ManufacturerUpdate,
 });
