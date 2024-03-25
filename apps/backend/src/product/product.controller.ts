@@ -12,10 +12,30 @@ export default new Elysia({ prefix: "/product" })
   .error({ NotFoundError })
   .get(
     "/",
-    async () => {
+    async ({ query: { search, barcode, barcodeType } }) => {
+      if (search) {
+        return prisma.product.findMany({
+          where: {
+            OR: [
+              { name: { contains: search, mode: "insensitive" } },
+              {
+                manufacturer: {
+                  name: { contains: search, mode: "insensitive" },
+                },
+              },
+            ],
+          },
+        });
+      }
+      if (barcode && barcodeType) {
+        return prisma.product.findMany({
+          where: { barcode, barcodeType },
+        });
+      }
       return prisma.product.findMany();
     },
     {
+      query: "product.searchParams",
       response: "product.productList",
       detail: schemaDetail,
     },

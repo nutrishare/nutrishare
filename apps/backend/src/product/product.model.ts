@@ -5,12 +5,13 @@ export const schemaDetail = {
   tags: ["Product"],
 };
 
-const Barcode = t.Union([
-  t.Literal("EAN_8"),
-  t.Literal("EAN_13"),
-  t.Literal("UPC_A"),
-  t.Literal("UPC_E"),
-]);
+// FIXME: This is displayed as a list of empty strings
+const Barcode = t.Enum({
+  EAN_8: "EAN_8",
+  EAN_13: "EAN_13",
+  UPC_A: "UPC_A",
+  UPC_E: "UPC_E",
+});
 
 const Product = t.Object({
   id: t.String(),
@@ -19,6 +20,7 @@ const Product = t.Object({
   authorId: t.String(),
 
   name: t.String(),
+  // FIXME: Use an optional property instead of Nullable
   description: Nullable(t.String()),
   barcode: Nullable(t.String()),
   barcodeType: Nullable(Barcode),
@@ -42,9 +44,18 @@ export const ProductCreate = t.Omit(Product, [
 
 export const ProductUpdate = t.Partial(ProductCreate);
 
+const SearchParams = t.Partial(
+  t.Object({
+    search: t.String(),
+    barcode: t.String(),
+    barcodeType: Barcode,
+  }),
+);
+
 export const productModel = new Elysia().model({
   "product.product": Product,
   "product.productList": ProductList,
   "product.productCreate": ProductCreate,
   "product.productUpdate": ProductUpdate,
+  "product.searchParams": SearchParams,
 });

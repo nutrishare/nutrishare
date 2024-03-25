@@ -24,9 +24,16 @@ export const ManufacturerCreate = t.Omit(Manufacturer, [
 
 export const ManufacturerUpdate = t.Partial(ManufacturerCreate);
 
+const SearchParams = t.Partial(
+  t.Object({
+    search: t.String(),
+  }),
+);
+
 export const manufacturerModel = new Elysia().model({
   "manufacturer.manufacturer": Manufacturer,
   "manufacturer.manufacturerList": ManufacturerList,
   "manufacturer.manufacturerCreate": ManufacturerCreate,
   "manufacturer.manufacturerUpdate": ManufacturerUpdate,
+  "manufacturer.searchParams": SearchParams,
 });

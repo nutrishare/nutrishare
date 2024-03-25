@@ -12,10 +12,16 @@ export default new Elysia({ prefix: "/manufacturer" })
   .error({ NotFoundError })
   .get(
     "/",
-    async () => {
+    async ({ query: { search } }) => {
+      if (search) {
+        return prisma.manufacturer.findMany({
+          where: { name: { contains: search, mode: "insensitive" } },
+        });
+      }
       return prisma.manufacturer.findMany();
     },
     {
+      query: "manufacturer.searchParams",
       response: "manufacturer.manufacturerList",
       detail: schemaDetail,
     },
