@@ -2,6 +2,7 @@ import Elysia from "elysia";
 import { cors, swagger } from "./plugins";
 import auth from "./auth/auth.controller";
 import product from "./product/product.controller";
+import manufacturer from "./manufacturer/manufacturer.controller";
 
 const app = new Elysia()
   .use(swagger)
@@ -10,6 +11,7 @@ const app = new Elysia()
     app
       .use(auth)
       .use(product)
+      .use(manufacturer)
       .onError(({ code, error, set }) => {
         if (code === "BadRequestError") {
           set.status = "Bad Request";

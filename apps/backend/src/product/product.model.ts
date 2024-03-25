@@ -22,6 +22,7 @@ const Product = t.Object({
   description: Nullable(t.String()),
   barcode: Nullable(t.String()),
   barcodeType: Nullable(Barcode),
+  manufacturerId: t.String(),
 
   weight: Nullable(t.Number()),
   calories: Nullable(t.Number()),
@@ -32,7 +33,7 @@ const Product = t.Object({
 
 const ProductList = t.Array(Product);
 
-const ProductCreate = t.Omit(Product, [
+export const ProductCreate = t.Omit(Product, [
   "id",
   "createdAt",
   "updatedAt",

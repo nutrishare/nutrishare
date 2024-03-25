@@ -1,14 +1,11 @@
-import { Product, User, prisma } from "@nutrishare/db";
+import { User, prisma } from "@nutrishare/db";
+import { type Static } from "@sinclair/typebox";
 import Elysia from "elysia";
-
-type ProductCreate = Omit<
-  Product,
-  "id" | "createdAt" | "updatedAt" | "authorId"
->;
+import { ProductCreate } from "./product.model";
 
 export default new Elysia().derive(async () => ({
   productService: {
-    createProduct: async (data: ProductCreate, user: User) => {
+    createProduct: async (data: Static<typeof ProductCreate>, user: User) => {
       return prisma.product.create({
         data: { ...data, authorId: user.id },
       });

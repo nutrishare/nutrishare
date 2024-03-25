@@ -17,6 +17,7 @@ model User {
   authKey      AuthKey[]
   refreshToken RefreshToken[]
   product      Product[]
+  manufacturer Manufacturer[]
 }
 
 model AuthKey {
@@ -47,10 +48,12 @@ model Product {
   authorId  String
   author    User     @relation(fields: [authorId], references: [id])
 
-  name        String
-  description String?
-  barcode     String?
-  barcodeType BarcodeType?
+  name           String
+  description    String?
+  barcode        String?
+  barcodeType    BarcodeType?
+  manufacturerId String
+  manufacturer   Manufacturer @relation(fields: [manufacturerId], references: [id])
 
   weight   Float?
   calories Float?
@@ -66,4 +69,15 @@ enum BarcodeType {
   EAN_13
   UPC_A
   UPC_E
+}
+
+model Manufacturer {
+  id        String   @id @unique @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id])
+
+  name    String
+  product Product[]
 }
