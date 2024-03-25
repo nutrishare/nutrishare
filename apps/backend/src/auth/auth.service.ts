@@ -16,7 +16,8 @@ export default new Elysia()
     ConflictError,
     UnauthorizedError,
   })
-  .derive(async ({ accessJwt, refreshJwt }) => ({
+  // FIXME: This shouldn't be a global service
+  .derive({ as: "global" }, async ({ accessJwt, refreshJwt }) => ({
     authService: {
       signTokenPair: async (user: { userId: string; username: string }) => {
         const accessToken = await accessJwt.sign({

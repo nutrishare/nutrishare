@@ -1,5 +1,5 @@
 import jwt from "@elysiajs/jwt";
-import Elysia, { t } from "elysia";
+import { Elysia, t } from "elysia";
 import appEnv from "../env";
 
 export enum TokenType {
