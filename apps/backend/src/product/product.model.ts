@@ -40,8 +40,11 @@ export const ProductCreate = t.Omit(Product, [
   "authorId",
 ]);
 
+export const ProductUpdate = t.Partial(ProductCreate);
+
 export const productModel = new Elysia().model({
   "product.product": Product,
   "product.productList": ProductList,
   "product.productCreate": ProductCreate,
+  "product.productUpdate": ProductUpdate,
 });
