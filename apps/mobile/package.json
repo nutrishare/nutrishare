@@ -4,16 +4,14 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web"
+    "dev": "expo start --dev-client"
   },
   "dependencies": {
     "@babel/runtime": "^7.24.1",
     "@expo/metro-config": "^0.17.6",
     "@expo/metro-runtime": "^3.1.3",
     "expo": "~50.0.14",
+    "expo-dev-client": "~3.3.11",
     "expo-status-bar": "~1.11.1",
     "react": "18.2.0",
     "react-native": "0.73.6",

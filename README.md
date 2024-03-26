@@ -13,5 +13,9 @@ We use pnpm for package management and bun as the runtime.
 
 To run the mobile app (Expo), you need to start it separately, as their CLI doesn't fully work when running non-interatively:
 
-`pnpm --filter mobile start --tunnel`
-
+1. Install the development build
+2. `pnpm --filter mobile dev`
+  - When running in WSL, you might need to add the `--localhost` flag and open the port to the world
+  - Normally, the dev client should be open on the local network
+3. Open the development client on your phone
+4. Connect to the dev client
