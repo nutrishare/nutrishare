@@ -4,7 +4,7 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "dev": "expo start --dev-client"
+    "start": "expo start --dev-client"
   },
   "dependencies": {
     "@babel/runtime": "^7.24.1",
