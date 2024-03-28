@@ -8,7 +8,8 @@ export default new Elysia()
   .error({
     UnauthorizedError,
   })
-  .derive(async ({ headers, authService }) => {
+  // TODO: Use guards for checking user authentication
+  .derive({ as: "scoped" }, async ({ headers, authService }) => {
     // biome-ignore lint: Valid Record access
     const accessToken = headers["authorization"]?.split(" ")[1];
     if (!accessToken) throw new UnauthorizedError();

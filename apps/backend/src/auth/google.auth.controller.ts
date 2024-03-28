@@ -1,22 +1,24 @@
 import Elysia, { t } from "elysia";
 import { googleAuth } from "../lucia";
-import cookie from "@elysiajs/cookie";
 import { getSuccessCallbackUrl } from "./util";
 import authService from "./auth.service";
 import { schemaDetail } from "./auth.model";
 
 export default new Elysia({ prefix: "/google" })
-  .use(cookie())
   .use(authService)
   .get(
     "/authorize",
-    async ({ set, setCookie }) => {
+    async ({ set, cookie: { googleAuthState } }) => {
       const [authUrl, authState] = await googleAuth.getAuthorizationUrl();
       // FIXME: Set secure=true when we have HTTPS (maybe with env=PRODUCTION set?)
-      setCookie("googleAuthState", authState, { maxAge: 60 });
+      googleAuthState.value = authState;
+      googleAuthState.maxAge = 60;
       set.redirect = authUrl.toString();
     },
     {
+      cookie: t.Cookie({
+        googleAuthState: t.String(),
+      }),
       detail: {
         ...schemaDetail,
         responses: {

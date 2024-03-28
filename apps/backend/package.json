@@ -7,13 +7,13 @@
     "dev": "bun run --watch src/index.ts"
   },
   "dependencies": {
-    "@elysiajs/cookie": "^0.7.0",
-    "@elysiajs/cors": "^0.7.0",
-    "@elysiajs/eden": "0.7.1",
-    "@elysiajs/jwt": "0.7.0",
-    "@elysiajs/swagger": "0.7.2",
+    "@elysiajs/cors": "^1.0.2",
+    "@elysiajs/eden": "^1.0.7",
+    "@elysiajs/jwt": "^1.0.2",
+    "@elysiajs/swagger": "^1.0.3",
     "@nutrishare/db": "workspace:*",
-    "elysia": "0.7.13",
+    "elysia": "^1.0.9",
+    "@sinclair/typebox": "~0.32",
     "@lucia-auth/adapter-prisma": "^3.0.1",
     "@lucia-auth/oauth": "^3.3.0",
     "lucia": "^2.7.0"
@@ -27,7 +27,6 @@
   "main": "src/index.ts",
   "type": "module",
   "peerDependencies": {
-    "typescript": "^5.0.0",
-    "@sinclair/typebox": "~0.31"
+    "typescript": "^5.0.0"
   }
 }
